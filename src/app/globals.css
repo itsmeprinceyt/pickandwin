@@ -5,3 +5,11 @@
 * {
   transition: all 400ms ease-in-out;
 }
+
+#timeoutSlider::-webkit-slider-thumb {
+  background-color: #7e22ce; /* Purple color for the thumb */
+  border-radius: 50%; /* Round shape for the thumb */
+  width: 15px; /* Width of the thumb */
+  height: 15px; /* Height of the thumb */
+  appearance: none;
+}
