@@ -1,13 +1,13 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect} from "react";
+import { useState, useEffect, Suspense} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import MadeByMe from "@/app/(components)/MadeByMe";
 import HomeButton from "@/app/(components)/Home";
 
-export default function Start() {
+const Start = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const namesParam = searchParams.get("names");
@@ -195,3 +195,13 @@ export default function Start() {
     </div>
   );
 }
+
+const StartWithSuspense = () => {
+  return (
+      <Suspense fallback={<div>Loading...</div>}>
+          <Start />
+      </Suspense>
+  );
+};
+
+export default StartWithSuspense;
