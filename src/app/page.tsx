@@ -3,87 +3,79 @@ import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from "react";
 import Link from "next/link";
 
 export default function Home() {
-  const [inputValue, setInputValue] = useState<string>(""); // Input state
-  const [nameList, setNameList] = useState<string[]>([]); // Name list state
-  const [popupMessage, setPopupMessage] = useState<string>(""); // Popup message state
+  const [inputValue, setInputValue] = useState<string>("");
+  const [nameList, setNameList] = useState<string[]>([]);
+  const [popupMessage, setPopupMessage] = useState<string>("");
 
-  // Load names from localStorage on page load
   useEffect(() => {
     const storedNames = localStorage.getItem("nameList");
     if (storedNames) {
-      setNameList(JSON.parse(storedNames)); // Load the list from localStorage
+      setNameList(JSON.parse(storedNames));
     }
   }, []);
-
-  // Save the name list to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("nameList", JSON.stringify(nameList));
   }, [nameList]);
-
-  // Add new names from the input
+  
   const handleAddName = (): void => {
     if (inputValue.trim() !== "") {
-      // Split input by commas, trim each part, and filter out empty names
       const newNames = inputValue
         .split(",")
         .map((name) => name.trim())
         .filter((name) => name !== "");
 
-      setNameList((prevList) => [...prevList, ...newNames]); // Add new names to the list
-      setInputValue(""); // Clear input
+      setNameList((prevList) => [...prevList, ...newNames]);
+      setInputValue("");
 
-      // Show popup for added names
       const message =
         newNames.length > 1
           ? `New participants ${newNames.slice(0, 3).join(", ")} and more have been added!`
           : `New participant ${newNames[0]} has been added!`;
 
-      setPopupMessage(message); // Set popup message
+      setPopupMessage(message);
     }
   };
 
-  // Handle the "Enter" key press to add names
   const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>): void => {
     if (event.key === "Enter") {
       handleAddName();
     }
   };
 
-  // Handle input field changes
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setInputValue(event.target.value);
   };
 
-  // Hide popup after 3 seconds
   useEffect(() => {
     if (popupMessage) {
       const timer = setTimeout(() => {
-        setPopupMessage(""); // Hide popup
-      }, 3000);
-      return () => clearTimeout(timer); // Clear the timer on unmount
+        setPopupMessage("");
+      }, 3000); // Hide After: 3 Seconds
+      return () => clearTimeout(timer);
     }
   }, [popupMessage]);
 
-  // Remove a specific name from the list
   const handleRemoveName = (index: number): void => {
     setNameList((prevList) => prevList.filter((_, i) => i !== index));
   };
 
-  // Reset the entire name list
   const handleResetList = (): void => {
     setNameList([]);
     setPopupMessage("Name list has been reset!");
   };
 
   return (
-    <div className="bg-slate-900 h-screen flex justify-center items-center relative">
+    <div className="bg-gradient-to-b from-purple-500 to-purple-900 h-screen flex flex-col justify-center items-center gap-5 relative">
+
       {/* Popup notification */}
       {popupMessage && (
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-2 rounded-md shadow-lg">
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-purple-300 text-purple-950 px-6 py-2 rounded-md shadow-lg animate-pulse">
           {popupMessage}
         </div>
       )}
 
+      <h1 className="text-8xl font-bold text-white">Pick And Win</h1>
+      <h1 className="text-white w-[600px] text-center">Pick and Win is a simple tool for selecting giveaway winners.</h1>
       <div className="p-4 bg-green-700 w-96">
         <div className="mb-4 bg-red-300 flex">
           {/* Input for names */}
@@ -145,6 +137,15 @@ export default function Home() {
         >
           Reset List
         </button>
+      </div>
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white animate-pulse">
+        Made by💜
+        <Link href="https://www.youtube.com/channel/UC9UQVp8grhcVatbMcf0sa5w"
+          target="_blank">
+          <button className="hover:animate-bounce">
+            @itsmeprinceyt
+          </button>
+        </Link>
       </div>
     </div>
   );
