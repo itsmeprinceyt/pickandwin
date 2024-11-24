@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/PickAndWinLogo.png",
   },
+  keywords: "spin the wheel, spin the wheel latest,giveaway, winner, random, contest, pick, prize, selection tool, content creator",
 };
 
 export default function RootLayout({
