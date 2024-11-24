@@ -1,11 +1,11 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react"; // Import Suspense
 import MadeByMe from "@/app/(components)/MadeByMe";
 import HomeButton from "@/app/(components)/Home";
 
-export default function Winner() {
+const Winner = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const winnerName = searchParams.get("name"); // Retrieve winner's name from query params
@@ -18,7 +18,7 @@ export default function Winner() {
 
     return (
         <div className="w-screen h-screen bg-gradient-to-b from-green-500 to-green-900 flex justify-center items-center">
-            <HomeButton/>
+            <HomeButton />
 
             <div className="text-center animate-bounce">
                 <h1 className="text-white text-6xl font-bold mb-6">🥳 The Winner is 🎉</h1>
@@ -27,7 +27,17 @@ export default function Winner() {
                 </div>
             </div>
 
-            <MadeByMe/>
+            <MadeByMe />
         </div>
     );
-}
+};
+
+const WinnerPageWithSuspense = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <Winner />
+        </Suspense>
+    );
+};
+
+export default WinnerPageWithSuspense;

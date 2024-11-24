@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import MadeByMe from "@/app/(components)/MadeByMe";
