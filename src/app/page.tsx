@@ -76,7 +76,7 @@ export default function Home() {
       )}
 
       <h1 className="text-8xl font-bold text-white">Pick And Win</h1>
-      <h1 className="text-white w-[600px] text-center">Pick and Win is a simple tool for selecting giveaway winners.</h1>
+      <h1 className="text-white w-[600px] text-center">Pick and Win helps you choose giveaway winners easily. Just enter names or paste names separated by commas and hit that Start button!</h1>
       <div className="p-5 bg-black/30 border-2 border-purple-900 rounded-2xl w-96">
         <div className="mb-4  flex">
           <input
