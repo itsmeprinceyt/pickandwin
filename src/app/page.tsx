@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   const [inputValue, setInputValue] = useState<string>("");
@@ -16,7 +17,7 @@ export default function Home() {
   useEffect(() => {
     localStorage.setItem("nameList", JSON.stringify(nameList));
   }, [nameList]);
-  
+
   const handleAddName = (): void => {
     if (inputValue.trim() !== "") {
       const newNames = inputValue
@@ -65,7 +66,7 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-gradient-to-b from-purple-500 to-purple-900 h-screen flex flex-col justify-center items-center gap-5 relative">
+    <div className="bg-gradient-to-b from-purple-500 to-purple-900 h-screen flex flex-col justify-center items-center gap-3 relative">
 
       {/* Popup notification */}
       {popupMessage && (
@@ -76,67 +77,59 @@ export default function Home() {
 
       <h1 className="text-8xl font-bold text-white">Pick And Win</h1>
       <h1 className="text-white w-[600px] text-center">Pick and Win is a simple tool for selecting giveaway winners.</h1>
-      <div className="p-4 bg-green-700 w-96">
-        <div className="mb-4 bg-red-300 flex">
-          {/* Input for names */}
+      <div className="p-5 bg-black/30 border-2 border-purple-900 rounded-2xl w-96">
+        <div className="mb-4  flex">
           <input
-            className="border-2 border-black rounded-full p-2 mr-2 flex-grow"
+            className="rounded-xl p-2 mr-2 flex-grow focus:outline-none"
             type="text"
             value={inputValue}
             onChange={handleChange}
             onKeyDown={handleKeyPress}
-            placeholder="Enter names separated by commas"
+            placeholder="Enter User"
           />
 
           {/* Add button */}
-          <button
-            className="bg-blue-500 text-white rounded-full p-2 mr-2"
-            onClick={handleAddName}
-          >
-            Add
+          <button className="bg-purple-600  text-white rounded-full p-3 mr-2 hover:opacity-80"onClick={handleAddName}>
+            <Image
+              src="/addW.png"
+              height={70}
+              width={70}
+              alt="add"
+            />
           </button>
 
-          {/* Start button with navigation */}
-          <Link
-            href={{
-              pathname: "/start",
-              query: { names: nameList.join(",") }, // Pass nameList as a query parameter
-            }}
-          >
-            <button className="bg-yellow-500 text-white rounded-full p-2">
-              Start
-            </button>
-          </Link>
+          {/* Reset button */}
+          <button className="bg-pink-600 text-white font-semibold hover:opacity-80 rounded-xl w-full" onClick={handleResetList}>
+            Reset List
+          </button>
         </div>
 
-        <div className="bg-red-500 p-4 max-h-[300px] overflow-y-auto">
-          <h3 className="text-lg font-bold mb-2">Name List:</h3>
-          {/* Render the names as a list */}
-          <ul className="list-disc pl-6 flex gap-3 flex-col items-start">
+        <div className="bg-purple-950/30 border-2 border-purple-900 rounded-xl p-4 max-h-80 overflow-y-auto scrollbar-thin scrollbar- scrollbar-track-violet-500 scrollbar-thumb-white mb-4">
+          <h3 className="text-white text-lg font-semibold mb-4 text-center">Participants List</h3>
+          <ul className="flex gap-3 flex-col items-start">
             {nameList.map((name, index) => (
-              <li
-                className="bg-blue-500 text-white font-semibold px-5 py-2 rounded-md flex justify-between w-full"
-                key={index}
-              >
+              <li className="bg-purple-600 text-white font-semibold px-5 py-2 rounded-md flex justify-between w-full" key={index}>
                 <span>{name}</span>
                 <button
-                  className="ml-4 bg-red-600 text-white px-2 py-1 rounded-md"
-                  onClick={() => handleRemoveName(index)}
-                >
-                  Remove
+                  onClick={() => handleRemoveName(index)}>
+                  <Image
+                    src="/cross.png"
+                    height={10}
+                    width={10}
+                    alt="cross"
+                  />
                 </button>
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Reset button */}
-        <button
-          className="bg-red-600 text-white px-4 py-2 mt-4 rounded-md w-full"
-          onClick={handleResetList}
-        >
-          Reset List
-        </button>
+        <Link href={{pathname: "/start", query: { names: nameList.join(",") },}}> 
+          <button className="bg-white text-black font-semibold rounded-xl w-full p-2 hover:opacity-80">
+            Start
+          </button>
+        </Link>
+
       </div>
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white animate-pulse">
         Made by💜

@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 * {
-  transition: all 1000ms ease-in-out;
+  transition: all 400ms ease-in-out;
 }
