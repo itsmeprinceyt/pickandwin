@@ -1,18 +1,18 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, Suspense } from "react"; // Import Suspense
+import { useEffect, Suspense } from "react";
 import MadeByMe from "@/app/(components)/MadeByMe";
 import HomeButton from "@/app/(components)/Home";
 
 const Winner = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
-    const winnerName = searchParams.get("name"); // Retrieve winner's name from query params
+    const winnerName = searchParams.get("name"); 
 
     useEffect(() => {
         if (!winnerName) {
-            router.push("/"); // Redirect to homepage if no winner is found
+            router.push("/");
         }
     }, [winnerName, router]);
 
