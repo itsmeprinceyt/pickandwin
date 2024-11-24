@@ -4,6 +4,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import MadeByMe from "@/app/(components)/MadeByMe";
+import HomeButton from "@/app/(components)/Home";
 
 export default function Start() {
   const searchParams = useSearchParams();
@@ -25,21 +27,39 @@ export default function Start() {
     }
   }, [namesParam, router]);
 
+  useEffect(() => {
+    if (names.length === 1) {
+      router.push(`/winner?name=${encodeURIComponent(names[0])}`);
+
+    }
+  }, [names, router]);
+  
+
+
   const handleStart = () => {
     if (names.length === 0 || isChoosing) return;
-
+  
     setIsChoosing(true);
     const interval = setInterval(() => {
       const randomIndex = Math.floor(Math.random() * names.length);
       setCurrentName(names[randomIndex]);
-    }, 60);
-
+    }, 20);
+  
     setTimeout(() => {
       clearInterval(interval);
       const randomIndex = Math.floor(Math.random() * names.length);
-      setChosenName(names[randomIndex]);
-      setCurrentName(names[randomIndex]);
+      const selectedName = names[randomIndex];
+  
+      setChosenName(selectedName);
+      setCurrentName(selectedName);
       setIsChoosing(false);
+  
+      if (names.length === 2) {
+        // Remove the chosen name if there are only 2 names left
+        setNames((prevNames) => prevNames.filter((name) => name !== selectedName));
+        setChosenName(null); // Reset chosenName
+        setCurrentName(null); // Reset currentName
+      }
     }, timeoutDuration * 1000); // Use slider in the website to change time duration of shuffling.
   };
 
@@ -59,29 +79,18 @@ export default function Start() {
   }
   return (
     <div className="bg-gradient-to-b from-purple-500 to-purple-900 w-screen h-screen flex flex-col justify-center items-center relative">
-      <div className="absolute top-4 transform left-5 text-white">
-        <Link href="/">
-          <button>
-            <Image
-              src="/home.png"
-              height={15}
-              width={20}
-              alt="cross"
-            />
-          </button>
-        </Link>
-      </div>
-
+      
+      <HomeButton/>
       <div className="absolute top-4 transform right-5 text-white">
-        <button onClick={handleSettings}>
-          <Image
-            src="/settings.png"
-            height={20}
-            width={20}
-            alt="cross"
-          />
-        </button>
-      </div>
+            <button onClick={handleSettings}>
+                <Image
+                    src="/settings.png"
+                    height={20}
+                    width={20}
+                    alt="cross"
+                />
+            </button>
+        </div>
 
       {/* Settings */}
       {toggle && (
@@ -167,19 +176,22 @@ export default function Start() {
           <h3 className="text-8xl font-bold text-white">Winner:</h3>
           <div className=" bg-green-500 text-green-950 text-4xl font-semibold px-8 py-3 rounded-md">
             {names[0]}
-            </div>
+          </div>
+          <Link
+            href={{
+              pathname: "/winner",
+              query: { name: names[0] }, // Pass winner's name as query
+            }}
+          >
+            <button className="bg-white text-black font-semibold rounded-xl p-3 hover:opacity-80">
+              View Full-Screen Winner
+            </button>
+          </Link>
         </div>
       )}
 
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white animate-pulse">
-        Made by💜
-        <Link href="https://www.youtube.com/channel/UC9UQVp8grhcVatbMcf0sa5w"
-          target="_blank">
-          <button className="hover:animate-bounce">
-            @itsmeprinceyt
-          </button>
-        </Link>
-      </div>
+
+      <MadeByMe/>
     </div>
   );
 }
