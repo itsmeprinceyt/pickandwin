@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import MadeByMe from "@/app/(components)/MadeByMe";
@@ -18,8 +18,7 @@ const Start = () => {
   const [chosenName, setChosenName] = useState<string | null>(null);
   const [timeoutDuration, setTimeoutDuration] = useState(3);
   const [toggle, setToggle] = useState(false);
-  const [Autotoggle, setAutoToggle] = useState(false);
-  const AutoInterval = useRef<ReturnType<typeof setInterval> | null>(null);
+  
   const [highlightColor, setHighlightColor] = useState("#ff0000"); // Default color (Red)
 
 
@@ -64,13 +63,6 @@ const Start = () => {
         setCurrentName(null);
       }
 
-      if (names.length === 1) {
-        setAutoToggle(false);
-        if (AutoInterval.current) {
-          clearInterval(AutoInterval.current);
-          AutoInterval.current = null;
-        }
-      }
     }, timeoutDuration * 1000); // Use slider in the website to change time duration of shuffling.
   };
 
@@ -93,90 +85,9 @@ const Start = () => {
     setNames((prevList) => prevList.filter((_, i) => i !== index));
   };
 
-  let stopAutoShuffle = false;
-  console.log(`${stopAutoShuffle} 1`)
   const handleAuto = () => {
-    if (Autotoggle) {
-      // Stopping auto mode
-      setAutoToggle(false);
-      stopAutoShuffle = true; // Set the stop condition
-      console.log(`${stopAutoShuffle} 2`)
-      if (AutoInterval.current !== null) {
-        clearInterval(AutoInterval.current);
-        AutoInterval.current = null;
-      }
-    } else {
-      // Starting auto mode
-      setAutoToggle(true);
-      stopAutoShuffle = false; // Reset the stop condition
-      console.log(`${stopAutoShuffle} 3`)
-      // Type-safe auto shuffle function
-      const autoShuffle = async (): Promise<void> => {
-        while (!stopAutoShuffle && names.length > 1) {
-          setIsChoosing(true);
-          console.log(`${stopAutoShuffle} 4`)
-          // Start shuffling logic
-          const shuffle = new Promise<void>((resolve) => {
-            const interval = setInterval(() => {
-              const randomIndex = Math.floor(Math.random() * names.length);
-              setCurrentName(names[randomIndex]);
-            }, 70);
-  
-            setTimeout(() => {
-              clearInterval(interval);
-              resolve(); // Shuffling complete
-            }, timeoutDuration * 1000);
-          });
-  
-          await shuffle;
 
-        // Break the loop if stopped during shuffle
-        if (stopAutoShuffle) {
-          console.log(`${stopAutoShuffle} 5`);
-          break;
-        }
-        // Select a name and remove it
-        const randomIndex = Math.floor(Math.random() * names.length);
-        const selectedName = names[randomIndex];
-        setChosenName(selectedName);
-        setCurrentName(selectedName);
-  
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setNames((prevNames) =>
-              prevNames.filter((name) => name !== selectedName)
-            );
-            setChosenName(null);
-            setCurrentName(null);
-            setIsChoosing(false);
-            resolve(); // Name removed
-          }, 1000); // Small delay for better visual feedback
-        });
-
-        // Break the loop if stopped during name removal
-        if (stopAutoShuffle) {
-          console.log(`${stopAutoShuffle} 6`);
-          break;
-        }
-      }
-  
-        // Cleanup logic
-        if (stopAutoShuffle) {
-          setAutoToggle(false); // Reset the toggle state
-          stopAutoShuffle = true;
-          console.log(`${stopAutoShuffle} 7`);
-          if (AutoInterval.current !== null) {
-            clearInterval(AutoInterval.current);
-            AutoInterval.current = null;
-          }
-        }
-      };
-    autoShuffle(); // Start the async shuffle process
-  }
-};
-  
-  
-  
+  };
 
   return (
     <div className="bg-gradient-to-b from-purple-500 to-purple-900 w-screen h-screen flex flex-col justify-center items-center relative">
@@ -251,7 +162,7 @@ const Start = () => {
           className="bg-white w-[125px] text-black font-semibold rounded-full px-8 py-3 shadow-lg shadow-black/10"
           onClick={handleAuto}
         >
-          {Autotoggle ? 'Stop' : 'Auto'}
+          Auto
         </button>
         <button
           className="bg-white w-[125px] text-black font-semibold rounded-full px-8 py-3 shadow-lg shadow-black/10"
