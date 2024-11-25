@@ -1,3 +1,8 @@
+## TO DO
+- add new line add users ( separated box for adding )
+- add auto button
+- slow down the shuffling and then come down to the chosen one
+
 # Pick And Drop
 
 Pick and Win helps you choose giveaway winners easily. Just add participant names, shuffle them, and pick a winner at random. It's perfect for content creators running giveaways and makes selecting a fair winner quick and simple.
