@@ -2,6 +2,7 @@
 import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import MadeByMe from "@/app/(components)/MadeByMe";
 
 export default function Home() {
   const [inputValue, setInputValue] = useState<string>("");
@@ -131,15 +132,7 @@ export default function Home() {
         </Link>
 
       </div>
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white animate-pulse">
-        Made by💜
-        <Link href="https://www.youtube.com/channel/UC9UQVp8grhcVatbMcf0sa5w"
-          target="_blank">
-          <button className="hover:animate-bounce">
-            @itsmeprinceyt
-          </button>
-        </Link>
-      </div>
+      <MadeByMe/>
     </div>
   );
 }

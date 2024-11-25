@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect, Suspense} from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import MadeByMe from "@/app/(components)/MadeByMe";
@@ -20,9 +20,9 @@ const Start = () => {
   const [toggle, setToggle] = useState(false);
 
   useEffect(() => {
-    if (namesParam) { // will run only if there are names
+    if (namesParam) { // If state will run only if there are names
       setNames(decodeURIComponent(namesParam).split(","));
-    } else { // will redirect to home page if there are no names
+    } else { // Otherwise it will redirect to home page if there are no names
       router.push("/");
     }
   }, [namesParam, router]);
@@ -33,32 +33,31 @@ const Start = () => {
 
     }
   }, [names, router]);
-  
+
 
 
   const handleStart = () => {
     if (names.length === 0 || isChoosing) return;
-  
+
     setIsChoosing(true);
     const interval = setInterval(() => {
       const randomIndex = Math.floor(Math.random() * names.length);
       setCurrentName(names[randomIndex]);
-    }, 20);
-  
+    }, 70);
+
     setTimeout(() => {
       clearInterval(interval);
       const randomIndex = Math.floor(Math.random() * names.length);
       const selectedName = names[randomIndex];
-  
+
       setChosenName(selectedName);
       setCurrentName(selectedName);
       setIsChoosing(false);
-  
+
       if (names.length === 2) {
-        // Remove the chosen name if there are only 2 names left
         setNames((prevNames) => prevNames.filter((name) => name !== selectedName));
-        setChosenName(null); // Reset chosenName
-        setCurrentName(null); // Reset currentName
+        setChosenName(null);
+        setCurrentName(null);
       }
     }, timeoutDuration * 1000); // Use slider in the website to change time duration of shuffling.
   };
@@ -79,18 +78,18 @@ const Start = () => {
   }
   return (
     <div className="bg-gradient-to-b from-purple-500 to-purple-900 w-screen h-screen flex flex-col justify-center items-center relative">
-      
-      <HomeButton/>
+
+      <HomeButton />
       <div className="absolute top-4 transform right-5 text-white">
-            <button onClick={handleSettings}>
-                <Image
-                    src="/settings.png"
-                    height={15}
-                    width={15}
-                    alt="cross"
-                />
-            </button>
-        </div>
+        <button onClick={handleSettings}>
+          <Image
+            src="/settings.png"
+            height={15}
+            width={15}
+            alt="cross"
+          />
+        </button>
+      </div>
 
       {/* Settings */}
       {toggle && (
@@ -151,22 +150,26 @@ const Start = () => {
         )}
       </div>
 
-      {/* Remaining names Container*/}
+      {/* Remaining names Container */}
       <div className="p-5 bg-black/30 mt-6 text-center rounded-2xl shadow-lg shadow-black/20">
         <h3 className="text-lg font-bold text-white mb-2">
           Remaining Participants: <span className="animate-pulse">{names.length}</span>
         </h3>
-        <div className="p-3 flex flex-wrap gap-3 justify-center w-[300px] md:w-[500px] bg-purple-950/10 max-h-80 overflow-y-auto scrollbar-thin scrollbar- scrollbar-track-violet-500 scrollbar-thumb-white  rounded-md">
+        <div className="p-3 flex flex-wrap gap-3 justify-center w-[300px] md:w-[500px] bg-purple-950/10 max-h-80 overflow-y-auto scrollbar-thin scrollbar-track-violet-500 scrollbar-thumb-white rounded-md">
           {names.map((name, index) => (
             <span
               key={index}
-              className="bg-purple-600 text-white font-semibold px-5 py-2 rounded-md"
+              className={`px-5 py-2 rounded-md font-semibold text-white transition-all duration-300 ${currentName === name
+                  ? "bg-red-600 scale-125"
+                  : "bg-purple-600"
+                }`}
             >
               {name}
             </span>
           ))}
         </div>
       </div>
+
 
 
       {/* Winner display */}
@@ -188,18 +191,16 @@ const Start = () => {
           </Link>
         </div>
       )}
-
-
-      <MadeByMe/>
+      <MadeByMe />
     </div>
   );
 }
 
 const StartWithSuspense = () => {
   return (
-      <Suspense fallback={<div>Loading...</div>}>
-          <Start />
-      </Suspense>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Start />
+    </Suspense>
   );
 };
 
