@@ -1,8 +1,5 @@
 ## TO DO
-- add cross in remaining participants 
 - add new line add users ( separated box for adding )
-- rename to shuffle 
-- setting button resize
 - add auto button
 - slow down the shuffling and then come down to the chosen one
 

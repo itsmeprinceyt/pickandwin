@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import MadeByMe from "@/app/(components)/MadeByMe";
@@ -18,6 +18,8 @@ const Start = () => {
   const [chosenName, setChosenName] = useState<string | null>(null);
   const [timeoutDuration, setTimeoutDuration] = useState(3);
   const [toggle, setToggle] = useState(false);
+  const [Autotoggle, setAutoToggle] = useState(false);
+  const AutoInterval = useRef<ReturnType<typeof setInterval> | null>(null);
   const [highlightColor, setHighlightColor] = useState("#ff0000"); // Default color (Red)
 
 
@@ -61,10 +63,18 @@ const Start = () => {
         setChosenName(null);
         setCurrentName(null);
       }
+
+      if (names.length === 1) {
+        setAutoToggle(false);
+        if (AutoInterval.current) {
+          clearInterval(AutoInterval.current);
+          AutoInterval.current = null;
+        }
+      }
     }, timeoutDuration * 1000); // Use slider in the website to change time duration of shuffling.
   };
 
-  const handleRemove = () => {
+  const handleRemove = async () => {
     if (!chosenName) return;
     setNames((prevNames) => prevNames.filter((name) => name !== chosenName));
     setChosenName(null);
@@ -78,16 +88,108 @@ const Start = () => {
       setToggle(true);
     }
   }
+
+  const handleRemoveName = (index: number): void => {
+    setNames((prevList) => prevList.filter((_, i) => i !== index));
+  };
+
+  let stopAutoShuffle = false;
+  console.log(`${stopAutoShuffle} 1`)
+  const handleAuto = () => {
+    if (Autotoggle) {
+      // Stopping auto mode
+      setAutoToggle(false);
+      stopAutoShuffle = true; // Set the stop condition
+      console.log(`${stopAutoShuffle} 2`)
+      if (AutoInterval.current !== null) {
+        clearInterval(AutoInterval.current);
+        AutoInterval.current = null;
+      }
+    } else {
+      // Starting auto mode
+      setAutoToggle(true);
+      stopAutoShuffle = false; // Reset the stop condition
+      console.log(`${stopAutoShuffle} 3`)
+      // Type-safe auto shuffle function
+      const autoShuffle = async (): Promise<void> => {
+        while (!stopAutoShuffle && names.length > 1) {
+          setIsChoosing(true);
+          console.log(`${stopAutoShuffle} 4`)
+          // Start shuffling logic
+          const shuffle = new Promise<void>((resolve) => {
+            const interval = setInterval(() => {
+              const randomIndex = Math.floor(Math.random() * names.length);
+              setCurrentName(names[randomIndex]);
+            }, 70);
+  
+            setTimeout(() => {
+              clearInterval(interval);
+              resolve(); // Shuffling complete
+            }, timeoutDuration * 1000);
+          });
+  
+          await shuffle;
+
+        // Break the loop if stopped during shuffle
+        if (stopAutoShuffle) {
+          console.log(`${stopAutoShuffle} 5`);
+          break;
+        }
+        // Select a name and remove it
+        const randomIndex = Math.floor(Math.random() * names.length);
+        const selectedName = names[randomIndex];
+        setChosenName(selectedName);
+        setCurrentName(selectedName);
+  
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            setNames((prevNames) =>
+              prevNames.filter((name) => name !== selectedName)
+            );
+            setChosenName(null);
+            setCurrentName(null);
+            setIsChoosing(false);
+            resolve(); // Name removed
+          }, 1000); // Small delay for better visual feedback
+        });
+
+        // Break the loop if stopped during name removal
+        if (stopAutoShuffle) {
+          console.log(`${stopAutoShuffle} 6`);
+          break;
+        }
+      }
+  
+        // Cleanup logic
+        if (stopAutoShuffle) {
+          setAutoToggle(false); // Reset the toggle state
+          stopAutoShuffle = true;
+          console.log(`${stopAutoShuffle} 7`);
+          if (AutoInterval.current !== null) {
+            clearInterval(AutoInterval.current);
+            AutoInterval.current = null;
+          }
+        }
+      };
+    autoShuffle(); // Start the async shuffle process
+  }
+};
+  
+  
+  
+
   return (
     <div className="bg-gradient-to-b from-purple-500 to-purple-900 w-screen h-screen flex flex-col justify-center items-center relative">
 
-      <HomeButton />
+      <HomeButton color="bg-purple-800" />
       <div className="absolute top-4 transform right-5 text-white">
-        <button onClick={handleSettings}>
+        <button
+          className="bg-purple-800 rounded-full p-2"
+          onClick={handleSettings}>
           <Image
             src="/settings.png"
-            height={15}
-            width={15}
+            height={25}
+            width={25}
             alt="cross"
           />
         </button>
@@ -137,7 +239,7 @@ const Start = () => {
       {/* Shuffle Container */}
       <div className="w-full flex justify-center items-center">
         <div className="bg-red-600 text-white font-bold text-2xl px-8 py-4 rounded-md shadow-lg shadow-black/20">
-          {currentName || "Click Start to Begin"}
+          {currentName || "Who Will Be Chosen?"}
         </div>
       </div>
 
@@ -147,10 +249,16 @@ const Start = () => {
       <div className="mt-6 flex gap-4">
         <button
           className="bg-white w-[125px] text-black font-semibold rounded-full px-8 py-3 shadow-lg shadow-black/10"
+          onClick={handleAuto}
+        >
+          {Autotoggle ? 'Stop' : 'Auto'}
+        </button>
+        <button
+          className="bg-white w-[125px] text-black font-semibold rounded-full px-8 py-3 shadow-lg shadow-black/10"
           onClick={handleStart}
           disabled={isChoosing || names.length === 0}
         >
-          Start
+          Shuffle
         </button>
         {chosenName && (
           <button
@@ -168,18 +276,28 @@ const Start = () => {
           Remaining Participants: <span className="animate-pulse">{names.length}</span>
         </h3>
         <div className="p-3 flex flex-wrap gap-3 justify-center w-[300px] md:w-[500px] bg-purple-950/10 max-h-80 overflow-y-auto scrollbar-thin scrollbar-track-violet-500 scrollbar-thumb-white rounded-md">
-        {names.map((name, index) => (
-    <span
-      key={index}
-      className={`px-5 py-2 rounded-md font-semibold text-white transition-all duration-300 ${currentName === name
-        ? `scale-125` // Apply scale only to selected name
-        : "bg-purple-600"
-      }`}
-      style={{ backgroundColor: currentName === name ? highlightColor : '' }} // Apply the dynamic background color
-    >
-      {name}
-    </span>
-  ))}
+          {names.map((name, index) => (
+            <span
+              key={index}
+              className={` px-5 py-2 rounded-md font-semibold text-white transition-all duration-300 ${currentName === name
+                ? `scale-125` // Apply scale only to selected name
+                : "bg-purple-600"
+                }`}
+              style={{ backgroundColor: currentName === name ? highlightColor : '' }} // Apply the dynamic background color
+            >
+              {name}
+              <button
+                className="ml-3"
+                onClick={() => handleRemoveName(index)}>
+                <Image
+                  src="/cross.png"
+                  height={10}
+                  width={10}
+                  alt="cross"
+                />
+              </button>
+            </span>
+          ))}
         </div>
       </div>
 

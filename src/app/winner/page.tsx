@@ -18,7 +18,7 @@ const Winner = () => {
 
     return (
         <div className="w-screen h-screen bg-gradient-to-b from-green-500 to-green-900 flex justify-center items-center">
-            <HomeButton />
+            <HomeButton color="bg-green-800" />
 
             <div className="text-center animate-bounce">
                 <h1 className="text-white text-4xl md:text-6xl font-bold mb-6">🥳 The Winner is 🎉</h1>
