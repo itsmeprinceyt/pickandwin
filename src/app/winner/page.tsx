@@ -21,8 +21,8 @@ const Winner = () => {
             <HomeButton />
 
             <div className="text-center animate-bounce">
-                <h1 className="text-white text-6xl font-bold mb-6">🥳 The Winner is 🎉</h1>
-                <div className="bg-white text-green-900 text-8xl font-extrabold p-8 rounded-xl shadow-lg">
+                <h1 className="text-white text-4xl md:text-6xl font-bold mb-6">🥳 The Winner is 🎉</h1>
+                <div className="bg-white text-green-900 text-3xl md:text-5xl lg:text-8xl font-extrabold p-8 rounded-xl shadow-lg">
                     {winnerName}
                 </div>
             </div>

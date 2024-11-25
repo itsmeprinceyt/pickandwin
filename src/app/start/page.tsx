@@ -85,8 +85,8 @@ const Start = () => {
             <button onClick={handleSettings}>
                 <Image
                     src="/settings.png"
-                    height={20}
-                    width={20}
+                    height={15}
+                    width={15}
                     alt="cross"
                 />
             </button>
@@ -95,7 +95,7 @@ const Start = () => {
       {/* Settings */}
       {toggle && (
         <div className="absolute z-20 left-0 right-0 bg-black/90 min-h-screen flex justify-center items-center">
-          <div className="relative bg-purple-600 border-2 border-white/30 text-white flex flex-col justify-center items-center p-10  rounded-xl shadow-xl shadow-white/20">
+          <div className="relative bg-purple-600 border-2 border-white/30 text-white flex flex-col justify-center items-center p-5 py-10 md:p-10 rounded-xl shadow-xl shadow-white/20">
             {/* To Close Pop up Setting*/}
             <button
               onClick={handleSettings}
@@ -123,9 +123,9 @@ const Start = () => {
 
       <h2 className="text-lg font-bold text-white mb-6">Shall We Begin?</h2>
 
-      {/* Display the current name */}
+      {/* Shuffle Container */}
       <div className="w-full flex justify-center items-center">
-        <div className="bg-red-600 text-white font-bold text-2xl px-8 py-4 rounded-md">
+        <div className="bg-red-600 text-white font-bold text-2xl px-8 py-4 rounded-md shadow-lg shadow-black/20">
           {currentName || "Click Start to Begin"}
         </div>
       </div>
@@ -135,7 +135,7 @@ const Start = () => {
       {/* Buttons */}
       <div className="mt-6 flex gap-4">
         <button
-          className="bg-white w-[125px] text-black font-semibold rounded-full px-8 py-3"
+          className="bg-white w-[125px] text-black font-semibold rounded-full px-8 py-3 shadow-lg shadow-black/10"
           onClick={handleStart}
           disabled={isChoosing || names.length === 0}
         >
@@ -143,7 +143,7 @@ const Start = () => {
         </button>
         {chosenName && (
           <button
-            className="bg-pink-600 w-[125px] text-white font-semibold rounded-full px-8 py-3"
+            className="bg-pink-600 w-[125px] text-white font-semibold rounded-full px-8 py-3 shadow-lg shadow-black/10"
             onClick={handleRemove}
           >
             Remove
@@ -151,13 +151,12 @@ const Start = () => {
         )}
       </div>
 
-      {/* Remaining names */}
-      {/* Remaining participants counter */}
-      <div className="p-5 bg-black/30 mt-6 text-center rounded-2xl">
+      {/* Remaining names Container*/}
+      <div className="p-5 bg-black/30 mt-6 text-center rounded-2xl shadow-lg shadow-black/20">
         <h3 className="text-lg font-bold text-white mb-2">
-          Remaining Participants: {names.length}
+          Remaining Participants: <span className="animate-pulse">{names.length}</span>
         </h3>
-        <div className="p-3 flex flex-wrap gap-3 justify-center w-[500px] bg-purple-950/10 max-h-80 overflow-y-auto scrollbar-thin scrollbar- scrollbar-track-violet-500 scrollbar-thumb-white  rounded-md">
+        <div className="p-3 flex flex-wrap gap-3 justify-center w-[300px] md:w-[500px] bg-purple-950/10 max-h-80 overflow-y-auto scrollbar-thin scrollbar- scrollbar-track-violet-500 scrollbar-thumb-white  rounded-md">
           {names.map((name, index) => (
             <span
               key={index}
@@ -180,7 +179,7 @@ const Start = () => {
           <Link
             href={{
               pathname: "/winner",
-              query: { name: names[0] }, // Pass winner's name as query
+              query: { name: names[0] },
             }}
           >
             <button className="bg-white text-black font-semibold rounded-xl p-3 hover:opacity-80">

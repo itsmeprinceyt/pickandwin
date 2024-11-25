@@ -70,17 +70,17 @@ export default function Home() {
 
       {/* Popup notification */}
       {popupMessage && (
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-purple-300 text-purple-950 px-6 py-2 rounded-md shadow-lg animate-pulse">
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 text-[10px] md:text-xs lg:text-md bg-purple-300 text-purple-950 px-6 py-2 rounded-md shadow-lg animate-pulse">
           {popupMessage}
         </div>
       )}
 
-      <h1 className="text-8xl font-bold text-white">Pick And Win</h1>
-      <h1 className="text-white w-[600px] text-center">Pick and Win helps you choose giveaway winners easily. Just enter names or paste names separated by commas and hit that Start button!</h1>
-      <div className="p-5 bg-black/30 border-2 border-purple-900 rounded-2xl w-96">
-        <div className="mb-4  flex">
+      <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white">Pick And Win</h1>
+      <h1 className="text-white w-[300px] md:w-[400px] lg:w-[600px] text-center">Pick and Win helps you choose giveaway winners easily. Just enter names or paste names separated by commas and hit that Start button!</h1>
+      <div className="p-5 bg-black/30 border-2 border-purple-900 rounded-2xl w-96 shadow-lg shadow-black/20">
+        <div className="mb-4 flex justify-between">
           <input
-            className="rounded-xl p-2 mr-2 flex-grow focus:outline-none"
+            className="rounded-xl p-2 w-[180px] focus:outline-none"
             type="text"
             value={inputValue}
             onChange={handleChange}
@@ -89,7 +89,7 @@ export default function Home() {
           />
 
           {/* Add button */}
-          <button className="bg-purple-600  text-white rounded-full p-3 mr-2 hover:opacity-80"onClick={handleAddName}>
+          <button className="bg-purple-600  text-white rounded-full h-[40px] w-[40px] p-3 hover:opacity-80"onClick={handleAddName}>
             <Image
               src="/addW.png"
               height={70}
@@ -99,12 +99,12 @@ export default function Home() {
           </button>
 
           {/* Reset button */}
-          <button className="bg-pink-600 text-white font-semibold hover:opacity-80 rounded-xl w-full" onClick={handleResetList}>
+          <button className="bg-pink-600 w-[100px] text-white font-semibold hover:opacity-80 rounded-xl " onClick={handleResetList}>
             Reset List
           </button>
         </div>
 
-        <div className="bg-purple-950/30 border-2 border-purple-900 rounded-xl p-4 max-h-80 overflow-y-auto scrollbar-thin scrollbar- scrollbar-track-violet-500 scrollbar-thumb-white mb-4">
+        <div className="bg-purple-950/30 border-2 border-purple-900 rounded-xl p-4 max-h-80 overflow-y-auto scrollbar-thin scrollbar- scrollbar-track-violet-500 scrollbar-thumb-white mb-4 ">
           <h3 className="text-white text-lg font-semibold mb-4 text-center">Participants List</h3>
           <ul className="flex gap-3 flex-col items-start">
             {nameList.map((name, index) => (
