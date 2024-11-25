@@ -85,10 +85,6 @@ const Start = () => {
     setNames((prevList) => prevList.filter((_, i) => i !== index));
   };
 
-  const handleAuto = () => {
-
-  };
-
   return (
     <div className="bg-gradient-to-b from-purple-500 to-purple-900 w-screen h-screen flex flex-col justify-center items-center relative">
 
@@ -158,12 +154,6 @@ const Start = () => {
 
       {/* Buttons */}
       <div className="mt-6 flex gap-4">
-        <button
-          className="bg-white w-[125px] text-black font-semibold rounded-full px-8 py-3 shadow-lg shadow-black/10"
-          onClick={handleAuto}
-        >
-          Auto
-        </button>
         <button
           className="bg-white w-[125px] text-black font-semibold rounded-full px-8 py-3 shadow-lg shadow-black/10"
           onClick={handleStart}
