@@ -18,6 +18,7 @@ const Start = () => {
   const [chosenName, setChosenName] = useState<string | null>(null);
   const [timeoutDuration, setTimeoutDuration] = useState(3);
   const [toggle, setToggle] = useState(false);
+  
   const [highlightColor, setHighlightColor] = useState("#ff0000"); // Default color (Red)
 
 
@@ -61,10 +62,11 @@ const Start = () => {
         setChosenName(null);
         setCurrentName(null);
       }
+
     }, timeoutDuration * 1000); // Use slider in the website to change time duration of shuffling.
   };
 
-  const handleRemove = () => {
+  const handleRemove = async () => {
     if (!chosenName) return;
     setNames((prevNames) => prevNames.filter((name) => name !== chosenName));
     setChosenName(null);
@@ -78,16 +80,23 @@ const Start = () => {
       setToggle(true);
     }
   }
+
+  const handleRemoveName = (index: number): void => {
+    setNames((prevList) => prevList.filter((_, i) => i !== index));
+  };
+
   return (
     <div className="bg-gradient-to-b from-purple-500 to-purple-900 w-screen h-screen flex flex-col justify-center items-center relative">
 
-      <HomeButton />
+      <HomeButton color="bg-purple-800" />
       <div className="absolute top-4 transform right-5 text-white">
-        <button onClick={handleSettings}>
+        <button
+          className="bg-purple-800 rounded-full p-2"
+          onClick={handleSettings}>
           <Image
             src="/settings.png"
-            height={15}
-            width={15}
+            height={25}
+            width={25}
             alt="cross"
           />
         </button>
@@ -137,7 +146,7 @@ const Start = () => {
       {/* Shuffle Container */}
       <div className="w-full flex justify-center items-center">
         <div className="bg-red-600 text-white font-bold text-2xl px-8 py-4 rounded-md shadow-lg shadow-black/20">
-          {currentName || "Click Start to Begin"}
+          {currentName || "Who Will Be Chosen?"}
         </div>
       </div>
 
@@ -150,7 +159,7 @@ const Start = () => {
           onClick={handleStart}
           disabled={isChoosing || names.length === 0}
         >
-          Start
+          Shuffle
         </button>
         {chosenName && (
           <button
@@ -168,18 +177,28 @@ const Start = () => {
           Remaining Participants: <span className="animate-pulse">{names.length}</span>
         </h3>
         <div className="p-3 flex flex-wrap gap-3 justify-center w-[300px] md:w-[500px] bg-purple-950/10 max-h-80 overflow-y-auto scrollbar-thin scrollbar-track-violet-500 scrollbar-thumb-white rounded-md">
-        {names.map((name, index) => (
-    <span
-      key={index}
-      className={`px-5 py-2 rounded-md font-semibold text-white transition-all duration-300 ${currentName === name
-        ? `scale-125` // Apply scale only to selected name
-        : "bg-purple-600"
-      }`}
-      style={{ backgroundColor: currentName === name ? highlightColor : '' }} // Apply the dynamic background color
-    >
-      {name}
-    </span>
-  ))}
+          {names.map((name, index) => (
+            <span
+              key={index}
+              className={` px-5 py-2 rounded-md font-semibold text-white transition-all duration-300 ${currentName === name
+                ? `scale-125` // Apply scale only to selected name
+                : "bg-purple-600"
+                }`}
+              style={{ backgroundColor: currentName === name ? highlightColor : '' }} // Apply the dynamic background color
+            >
+              {name}
+              <button
+                className="ml-3"
+                onClick={() => handleRemoveName(index)}>
+                <Image
+                  src="/cross.png"
+                  height={10}
+                  width={10}
+                  alt="cross"
+                />
+              </button>
+            </span>
+          ))}
         </div>
       </div>
 
