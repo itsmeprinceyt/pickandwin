@@ -8,7 +8,7 @@ Built with Next.js and styled using Tailwind CSS, this project combines performa
 
 - **Participant Management:** Easily add names one by one or in bulk using a comma-separated format. You can remove individual names or reset the entire list with a single click.
 - **Interactive Shuffle System:** Start the shuffle to randomly pick a name within a customizable timer (default 3 seconds). Experience the excitement as names are dynamically highlighted during the shuffle.
-- **Flexible Settings:** Use the settings button to adjust the shuffle timer duration for a more personalized experience.
+- **Flexible Settings:** Use the settings button to adjust the shuffle timer duration or highlighted user background color for a more personalized experience.
 - **Winner Announcement:** When only two participants remain, the shuffle automatically picks the winner, removing the selected name and redirecting to a dedicated winner page with their name displayed prominently.
 - **Seamless Navigation:** After the winner is announced, navigate back to the home page effortlessly to start a new round or manage participants.
 

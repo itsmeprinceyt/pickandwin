@@ -18,6 +18,8 @@ const Start = () => {
   const [chosenName, setChosenName] = useState<string | null>(null);
   const [timeoutDuration, setTimeoutDuration] = useState(3);
   const [toggle, setToggle] = useState(false);
+  const [highlightColor, setHighlightColor] = useState("#ff0000"); // Default color (Red)
+
 
   useEffect(() => {
     if (namesParam) { // If state will run only if there are names
@@ -101,7 +103,7 @@ const Start = () => {
               className="absolute top-5 right-5 hover:scale-125 transition-all ease-in-out">
               <Image src="/cross.png" width={10} height={20} alt="Close" />
             </button>
-            <div className="text-4xl font-bold">Change Shuffle Time</div>
+            <div className="text-4xl font-bold">Shuffle Time</div>
             {/* Slider for timeout duration */}
             <div className="mt-4 flex flex-col items-center">
               <label htmlFor="timeoutSlider" className="text-white font-bold mb-2"> {timeoutDuration} seconds
@@ -116,6 +118,16 @@ const Start = () => {
                 className="w-full h-2 bg-purple-300 rounded-lg appearance-none cursor-pointer active:bg-purple-400"
               />
             </div>
+            <div className="mt-8 mb-3 text-4xl font-bold">Highlight Color</div>
+            {/* Color Picker */}
+            <label htmlFor="colorPicker" className="text-white font-semibold mb-2">{highlightColor}</label>
+            <input
+              id="colorPicker"
+              type="color"
+              value={highlightColor}
+              onChange={(e) => setHighlightColor(e.target.value)}
+              className="w-[150px] rounded-md bg-white px-1"
+            />
           </div>
         </div>
       )}
@@ -156,17 +168,18 @@ const Start = () => {
           Remaining Participants: <span className="animate-pulse">{names.length}</span>
         </h3>
         <div className="p-3 flex flex-wrap gap-3 justify-center w-[300px] md:w-[500px] bg-purple-950/10 max-h-80 overflow-y-auto scrollbar-thin scrollbar-track-violet-500 scrollbar-thumb-white rounded-md">
-          {names.map((name, index) => (
-            <span
-              key={index}
-              className={`px-5 py-2 rounded-md font-semibold text-white transition-all duration-300 ${currentName === name
-                  ? "bg-red-600 scale-125"
-                  : "bg-purple-600"
-                }`}
-            >
-              {name}
-            </span>
-          ))}
+        {names.map((name, index) => (
+    <span
+      key={index}
+      className={`px-5 py-2 rounded-md font-semibold text-white transition-all duration-300 ${currentName === name
+        ? `scale-125` // Apply scale only to selected name
+        : "bg-purple-600"
+      }`}
+      style={{ backgroundColor: currentName === name ? highlightColor : '' }} // Apply the dynamic background color
+    >
+      {name}
+    </span>
+  ))}
         </div>
       </div>
 
