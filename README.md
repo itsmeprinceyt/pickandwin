@@ -88,7 +88,7 @@ If you'd like to contribute to this project:
 
 ## Live Demo
 
-Check out the live demo of the project here: [https://pickandwin-k3yn.vercel.app/](https://pickandwin-k3yn.vercel.app/)
+Check out the live demo of the project here: https://pickandwin-iota.vercel.app/
 
 ## Video Explaination
 
