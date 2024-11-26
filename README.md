@@ -82,3 +82,9 @@ If you'd like to contribute to this project:
 Check out the live demo of the project here: https://pickandwin-iota.vercel.app/
 
 ## Video Explaination
+
+## TO DO
+- Shall We Begin? : Change to Choosing when shuffling
+- Toggle between last man standing, first chosen.
+- if Nameslist.length <=1 = disable.
+- 
