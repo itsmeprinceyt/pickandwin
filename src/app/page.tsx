@@ -178,7 +178,8 @@ export default function Home() {
         </div>
 
       </div>
-      <div className="absolute bottom-4 w-[250px]">
+      
+      <div className="bottom-4 w-[250px]">
         <MadeByMe />
       </div>
     </div>
