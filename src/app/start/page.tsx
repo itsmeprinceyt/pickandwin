@@ -20,6 +20,7 @@ const Start = () => {
   const [toggle, setToggle] = useState(false);
   const [highlightColor, setHighlightColor] = useState("#ff0000");
   const [mode, setMode] = useState("lastOneStanding");
+  const [textColor, setTextColor] = useState("white");
 
   useEffect(() => {
     if (namesParam) { // If state will run only if there are names
@@ -41,6 +42,10 @@ const Start = () => {
       router.push(`/winner?name=${encodeURIComponent(chosenName)}`);
     }
   }, [mode, chosenName, router]);
+
+  useEffect(() => {
+    setTextColor(isBrightColor(highlightColor) ? "black" : "white");
+  }, [highlightColor]);
 
   const handleStart = () => {
     if (names.length === 0 || isChoosing) return;
@@ -108,6 +113,15 @@ const Start = () => {
 
   const handleModeChange = (selectedMode: string) => {
     setMode(selectedMode);
+  };
+
+  const isBrightColor = (color: string) => {
+    const r = parseInt(color.slice(1, 3), 16);
+    const g = parseInt(color.slice(3, 5), 16);
+    const b = parseInt(color.slice(5, 7), 16);
+
+    const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+    return luminance > 186;
   };
 
   return (
@@ -219,16 +233,22 @@ const Start = () => {
 
       {/* Shuffle Container */}
       <div className="w-full flex justify-center items-center">
-        <div className="text-white font-bold text-2xl px-8 py-4 rounded-md shadow-lg shadow-black/20 pointer-events-none"
-          style={{ backgroundColor: highlightColor }}>
+        <div
+          className="font-bold text-2xl px-8 py-4 rounded-md pointer-events-none"
+          style={{
+            backgroundColor: highlightColor,
+            color: textColor, // Dynamically apply the text color
+            boxShadow: `0 4px 10px ${highlightColor}60`,
+          }}
+        >
           {currentName || "Who Will Be Chosen?"}
         </div>
       </div>
 
-      {/* Buttons */}
+      {/* Shuffle & Remove Buttons */}
       <div className="mt-6 flex gap-4">
         <button
-          className="bg-white w-[125px] text-black font-semibold rounded-full px-8 py-3 shadow-lg shadow-black/10"
+          className="bg-white hover:shadow-lg hover:shadow-white/30 hover:scale-105 ease-linear duration-75 w-[125px] text-black font-semibold rounded-full px-8 py-3 shadow-lg shadow-black/10"
           onClick={handleStart}
           disabled={isChoosing || names.length === 0}
         >
@@ -236,7 +256,7 @@ const Start = () => {
         </button>
         {chosenName && (
           <button
-            className="bg-pink-500 w-[125px] text-white font-semibold rounded-full px-8 py-3 shadow-lg shadow-black/10"
+            className="bg-pink-500 hover:shadow-lg hover:shadow-pink-500/30 hover:scale-105 ease-linear duration-75 w-[125px] text-white font-semibold rounded-full px-8 py-3 shadow-lg shadow-black/10"
             onClick={handleRemove}
           >
             Remove
@@ -250,28 +270,35 @@ const Start = () => {
           Remaining Participants: <span className="animate-pulse">{names.length}</span>
         </h3>
         <div className="p-3 flex flex-wrap gap-3 justify-center w-[300px] md:w-[500px] bg-purple-950/10 max-h-80 overflow-y-auto scrollbar-thin scrollbar-track-violet-500 scrollbar-thumb-white rounded-md">
-          {names.map((name, index) => (
-            <span
-              key={index}
-              className={` px-5 py-2 rounded-md font-semibold text-white transition-all duration-300 ${currentName === name
-                ? `scale-125`
-                : "bg-purple-600"
-                }`}
-              style={{ backgroundColor: currentName === name ? highlightColor : '' }}
-            >
-              {name}
-              <button
-                className="ml-3"
-                onClick={() => handleRemoveName(index)}>
-                <Image
-                  src="/cross.png"
-                  height={10}
-                  width={10}
-                  alt="cross"
-                />
-              </button>
-            </span>
-          ))}
+          {names.map((name, index) => {
+            const isCurrent = currentName === name;
+            const textColor = isCurrent ? (isBrightColor(highlightColor) ? "black" : "white") : "white"; // We set which text color to set
+            const crossIcon = textColor === "white" ? "/cross.png" : "/cross2.png"; // We decide which icon will be displayed based on text color
+            return (
+              <span
+                key={index}
+                className={`px-5 py-2 rounded-md font-semibold transition-all duration-300 ${isCurrent ? "scale-125" : "bg-purple-600 text-white"
+                  }`}
+                style={{
+                  backgroundColor: isCurrent ? highlightColor : "",
+                  color: textColor,
+                }}
+              >
+                {name}
+                <button
+                  className="ml-3"
+                  onClick={() => handleRemoveName(index)}
+                >
+                  <Image
+                    src={crossIcon}
+                    height={10}
+                    width={10}
+                    alt="cross"
+                  />
+                </button>
+              </span>
+            );
+          })}
         </div>
       </div>
 

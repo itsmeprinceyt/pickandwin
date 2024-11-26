@@ -170,7 +170,7 @@ export default function Home() {
               />
             </button>
             {/* Reset button */}
-            <button className={`bg-pink-500 w-[100px] h-10 text-white font-semibold rounded-xl ${nameList.length < 1 ? "opacity-50 cursor-not-allowed" : "hover:shadow-lg hover:shadow-pink-600/30 hover:scale-105 ease-linear duration-75"}`} onClick={handleResetList} disabled={nameList.length < 1}>
+            <button className={`bg-pink-500 w-[100px] h-10 text-white font-semibold rounded-xl ${nameList.length < 1 ? "opacity-50 cursor-not-allowed" : "hover:shadow-lg hover:shadow-pink-500/30 hover:scale-105 ease-linear duration-75"}`} onClick={handleResetList} disabled={nameList.length < 1}>
               Reset List
             </button>
 
