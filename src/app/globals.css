@@ -7,9 +7,41 @@
 }
 
 #timeoutSlider::-webkit-slider-thumb {
-  background-color: #7e22ce; /* Purple color for the thumb */
-  border-radius: 50%; /* Round shape for the thumb */
-  width: 15px; /* Width of the thumb */
-  height: 15px; /* Height of the thumb */
+  background-color: #7e22ce;
+  border-radius: 50%; 
+  width: 15px;
+  height: 15px;
   appearance: none;
+}
+
+#last-one-standing-radio,
+#random-winner-radio {
+  appearance: none; 
+  width: 20px; 
+  height: 20px; 
+  border: 4px solid #7e22ce;
+  border-radius: 50%; 
+  background-color: white;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#last-one-standing-radio:checked,
+#random-winner-radio:checked {
+  background-color: #7e22ce; 
+  border-color: #f2e3ff; 
+}
+
+#last-one-standing-radio:checked::after,
+#random-winner-radio:checked::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background-color: #7e22ce; 
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

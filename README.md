@@ -6,11 +6,26 @@ Built with Next.js and styled using Tailwind CSS, this project combines performa
 
 ## Features
 
-- **Participant Management:** Easily add names one by one or in bulk using a comma-separated format or add names in each lines. You can remove individual names or reset the entire list with a single click.
-- **Interactive Shuffle System:** Start the shuffle to randomly pick a name within a customizable timer (default 3 seconds). Experience the excitement as names are dynamically highlighted during the shuffle.
-- **Flexible Settings:** Use the settings button to adjust the shuffle timer duration or highlighted user background color for a more personalized experience.
-- **Winner Announcement:** When only two participants remain, the shuffle automatically picks the winner, removing the selected name and redirecting to a dedicated winner page with their name displayed prominently.
-- **Seamless Navigation:** After the winner is announced, navigate back to the home page effortlessly to start a new round or manage participants.
+- **Participant Management**  
+  Easily add participants individually, in bulk with a comma-separated list, or by entering names line by line. Remove specific names or reset the entire list with a single click for streamlined management.
+
+- **Interactive Shuffle System**  
+  Engage with an exciting shuffle process that dynamically highlights participants before selecting a winner. Customize the shuffle duration (default is 3 seconds) and enjoy the suspenseful experience.
+
+- **Flexible Settings**  
+  Personalize your experience with adjustable shuffle timers and customizable highlight colors. Access these options seamlessly through the settings menu.
+
+- **Winner Selection Modes**  
+  Choose between two distinct winner selection modes:
+  - **Last One Standing**: Participants are gradually removed from the list until only one winner remains.
+  - **Random Winner**: A winner is selected randomly in a single shuffle.  
+  Toggle between these modes to suit the nature of your event.
+
+- **Winner Announcement**  
+  When the shuffle concludes, the winner is announced prominently. If only two participants remain, the shuffle automatically picks the winner, redirects to a dedicated winner page, and highlights their name.
+
+- **Seamless Navigation**  
+  Easily navigate back to the home page after a winner is announced to start a new round or manage participants.
 
 ## Tech Stack
 
@@ -82,9 +97,3 @@ If you'd like to contribute to this project:
 Check out the live demo of the project here: https://pickandwin-iota.vercel.app/
 
 ## Video Explaination
-
-## TO DO
-- Shall We Begin? : Change to Choosing when shuffling
-- Toggle between last man standing, first chosen.
-- if Nameslist.length <=1 = disable.
-- 

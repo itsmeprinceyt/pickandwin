@@ -170,11 +170,13 @@ export default function Home() {
               />
             </button>
             {/* Reset button */}
-            <button className="bg-pink-600 w-[100px] h-10 text-white font-semibold hover:shadow-lg hover:shadow-pink-600/30 hover:scale-105 ease-linear duration-75 rounded-xl " onClick={handleResetList}>
+            <button className={`bg-pink-500 w-[100px] h-10 text-white font-semibold rounded-xl ${nameList.length < 1 ? "opacity-50 cursor-not-allowed" : "hover:shadow-lg hover:shadow-pink-600/30 hover:scale-105 ease-linear duration-75"}`} onClick={handleResetList} disabled={nameList.length < 1}>
               Reset List
             </button>
-            <Link href={{ pathname: "/start", query: { names: nameList.join(",") }, }}>
-              <button className="bg-white text-black font-semibold rounded-xl w-[180px] p-2 hover:shadow-lg hover:shadow-white/30 hover:scale-105 ease-linear duration-75">
+
+            {/* Start button */}
+            <Link href={{pathname: "/start",query: { names: nameList.join(",") },}}>
+              <button className={`bg-white text-black font-semibold rounded-xl w-[180px] p-2 ${nameList.length < 2 ? "opacity-50 cursor-not-allowed" : "hover:shadow-lg hover:shadow-white/30 hover:scale-105 ease-linear duration-75"}`}disabled={nameList.length < 2}>
                 Start
               </button>
             </Link>

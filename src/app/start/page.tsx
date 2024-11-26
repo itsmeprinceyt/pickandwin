@@ -19,7 +19,7 @@ const Start = () => {
   const [timeoutDuration, setTimeoutDuration] = useState(3);
   const [toggle, setToggle] = useState(false);
   const [highlightColor, setHighlightColor] = useState("#ff0000");
-
+  const [mode, setMode] = useState("lastOneStanding");
 
   useEffect(() => {
     if (namesParam) { // If state will run only if there are names
@@ -36,7 +36,11 @@ const Start = () => {
     }
   }, [names, router]);
 
-
+  useEffect(() => {
+    if (mode === "randomWinner" && chosenName) {
+      router.push(`/winner?name=${encodeURIComponent(chosenName)}`);
+    }
+  }, [mode, chosenName, router]);
 
   const handleStart = () => {
     if (names.length === 0 || isChoosing) return;
@@ -102,6 +106,10 @@ const Start = () => {
     setNames((prevList) => prevList.filter((_, i) => i !== index));
   };
 
+  const handleModeChange = (selectedMode: string) => {
+    setMode(selectedMode);
+  };
+
   return (
     <div className="bg-gradient-to-b from-purple-500 to-purple-900 w-screen h-screen flex flex-col justify-center items-center relative">
 
@@ -124,43 +132,90 @@ const Start = () => {
       {/* Settings */}
       {toggle && (
         <div className="absolute z-20 left-0 right-0 bg-black/90 min-h-screen flex justify-center items-center">
-          <div className="relative bg-purple-600 border-2 border-white/30 text-white flex flex-col justify-center items-center p-5 py-10 md:p-10 rounded-xl shadow-xl shadow-white/20">
+          <div className="relative bg-purple-600 border-2 border-white/30 text-white flex flex-col justify-center gap-5 items-center p-5 py-10 md:p-8 rounded-xl shadow-xl shadow-white/20">
+
             {/* To Close Pop up Setting*/}
             <button
               onClick={handleSettings}
-              className="absolute top-5 right-5 hover:scale-125 transition-all ease-in-out">
+              className="absolute top-3 right-3 hover:scale-125 transition-all ease-in-out">
               <Image src="/cross.png" width={10} height={20} alt="Close" />
             </button>
-            <div className="text-4xl font-bold">Shuffle Time</div>
-            {/* Slider for timeout duration */}
-            <div className="mt-4 flex flex-col items-center">
-              <label htmlFor="timeoutSlider" className="text-white font-bold mb-2"> {timeoutDuration} seconds
-              </label>
+
+            {/* Slider for Shuffle Duration duration */}
+            <div className="w-[320px] bg-black/30 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg">
+              <div className="text-4xl font-bold">Shuffle Time</div>
+              <div className="flex flex-col items-center">
+                <label htmlFor="timeoutSlider" className="text-white font-bold mb-2"> {timeoutDuration} seconds
+                </label>
+                <input
+                  id="timeoutSlider"
+                  type="range"
+                  min="1"
+                  max="60"
+                  value={timeoutDuration}
+                  onChange={(e) => setTimeoutDuration(Number(e.target.value))}
+                  className="w-full h-2 bg-purple-300 rounded-lg appearance-none cursor-pointer active:bg-purple-400"
+                />
+              </div>
+            </div>
+
+            {/* Color Picker */}
+            <div className="w-[320px] bg-black/30 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-2">
+              <div className="text-4xl font-bold">Highlight Color</div>
+              <label htmlFor="colorPicker" className="text-white font-semibold mb-2">{highlightColor}</label>
               <input
-                id="timeoutSlider"
-                type="range"
-                min="1"
-                max="60"
-                value={timeoutDuration}
-                onChange={(e) => setTimeoutDuration(Number(e.target.value))}
-                className="w-full h-2 bg-purple-300 rounded-lg appearance-none cursor-pointer active:bg-purple-400"
+                id="colorPicker"
+                type="color"
+                value={highlightColor}
+                onChange={(e) => setHighlightColor(e.target.value)}
+                className="w-[150px] rounded-md bg-white px-1"
               />
             </div>
-            <div className="mt-8 mb-3 text-4xl font-bold">Highlight Color</div>
-            {/* Color Picker */}
-            <label htmlFor="colorPicker" className="text-white font-semibold mb-2">{highlightColor}</label>
-            <input
-              id="colorPicker"
-              type="color"
-              value={highlightColor}
-              onChange={(e) => setHighlightColor(e.target.value)}
-              className="w-[150px] rounded-md bg-white px-1"
-            />
+
+            {/* Mode Selector */}
+            <div className="w-[320px] bg-black/30 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-2">
+              <div className="text-4xl font-bold">Choose Mode</div>
+              <div className="flex flex-col items-start gap-1" id="mode-selector">
+                <label
+                  className={`flex items-center space-x-4 text-white ${mode === "lastOneStanding" ? "animate-pulse" : ""}`}
+                  id="last-one-standing-label"
+                >
+                  <input
+                    type="radio"
+                    name="mode"
+                    value="lastOneStanding"
+                    id="last-one-standing-radio"
+                    checked={mode === "lastOneStanding"}
+                    onChange={(e) => handleModeChange(e.target.value)}
+                    className="form-radio text-purple-500"
+                  />
+                  <span>Last One Standing</span>
+                </label>
+                <label
+                  className={`flex items-center space-x-4 text-white ${mode === "randomWinner" ? "animate-pulse" : ""}`}
+                  id="random-winner-label"
+                >
+                  <input
+                    type="radio"
+                    name="mode"
+                    value="randomWinner"
+                    id="random-winner-radio"
+                    checked={mode === "randomWinner"}
+                    onChange={(e) => handleModeChange(e.target.value)}
+                    className="form-radio text-purple-500"
+                  />
+                  <span>Random Winner</span>
+                </label>
+              </div>
+            </div>
+
           </div>
         </div>
       )}
 
-      <h2 className="text-lg font-bold text-white mb-6">Shall We Begin?</h2>
+      <h2 className="text-lg font-bold text-white mb-6">
+        {isChoosing ? "Drumroll, please!" : `Here we go!`}
+      </h2>
 
       {/* Shuffle Container */}
       <div className="w-full flex justify-center items-center">
@@ -181,7 +236,7 @@ const Start = () => {
         </button>
         {chosenName && (
           <button
-            className="bg-pink-600 w-[125px] text-white font-semibold rounded-full px-8 py-3 shadow-lg shadow-black/10"
+            className="bg-pink-500 w-[125px] text-white font-semibold rounded-full px-8 py-3 shadow-lg shadow-black/10"
             onClick={handleRemove}
           >
             Remove
@@ -219,8 +274,6 @@ const Start = () => {
           ))}
         </div>
       </div>
-
-
 
       {/* Winner display */}
       {names.length === 1 && (
