@@ -27,8 +27,9 @@ const Winner = () => {
                     {winnerName}
                 </div>
             </div>
-
-            <MadeByMe />
+            <div className="bottom-4 w-[250px]">
+                <MadeByMe />
+            </div>
         </div>
     );
 };

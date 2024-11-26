@@ -174,11 +174,8 @@ export default function Home() {
               </button>
             </Link>
           </div>
-
         </div>
-
       </div>
-      
       <div className="bottom-4 w-[250px]">
         <MadeByMe />
       </div>
