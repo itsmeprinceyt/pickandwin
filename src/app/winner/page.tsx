@@ -2,8 +2,8 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, Suspense } from "react";
-import MadeByMe from "@/app/(components)/MadeByMe";
-import HomeButton from "@/app/(components)/Home";
+import MadeByMe from "@/(components)/MadeByMe"
+import HomeButton from "@/(components)/Home";
 
 const Winner = () => {
     const searchParams = useSearchParams();

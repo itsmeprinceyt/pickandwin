@@ -7,7 +7,7 @@ interface HomeProps {
 
 export default function Home({ color }: HomeProps) {
     return (
-        <div className="absolute top-4 transform left-5 text-white">
+        <div className="absolute top-5 transform left-5 text-white">
             <Link href="/">
                 <button
                     className={`rounded-full p-2 ${color}`} // Dynamically apply the color prop

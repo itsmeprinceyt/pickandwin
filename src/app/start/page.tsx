@@ -4,8 +4,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import MadeByMe from "@/app/(components)/MadeByMe";
-import HomeButton from "@/app/(components)/Home";
+import MadeByMe from "@/(components)/MadeByMe"
+import HomeButton from "@/(components)/Home";
 
 const Start = () => {
   const searchParams = useSearchParams();
@@ -18,7 +18,7 @@ const Start = () => {
   const [chosenName, setChosenName] = useState<string | null>(null);
   const [timeoutDuration, setTimeoutDuration] = useState(3);
   const [toggle, setToggle] = useState(false);
-  
+
   const [highlightColor, setHighlightColor] = useState("#ff0000"); // Default color (Red)
 
 
@@ -89,7 +89,7 @@ const Start = () => {
     <div className="bg-gradient-to-b from-purple-500 to-purple-900 w-screen h-screen flex flex-col justify-center items-center relative">
 
       <HomeButton color="bg-purple-800" />
-      <div className="absolute top-4 transform right-5 text-white">
+      <div className="absolute top-5 transform right-5 text-white">
         <button
           className="bg-purple-800 rounded-full p-2"
           onClick={handleSettings}>
@@ -145,12 +145,11 @@ const Start = () => {
 
       {/* Shuffle Container */}
       <div className="w-full flex justify-center items-center">
-        <div className="bg-red-600 text-white font-bold text-2xl px-8 py-4 rounded-md shadow-lg shadow-black/20">
+        <div className="text-white font-bold text-2xl px-8 py-4 rounded-md shadow-lg shadow-black/20"
+          style={{ backgroundColor: highlightColor }}>
           {currentName || "Who Will Be Chosen?"}
         </div>
       </div>
-
-
 
       {/* Buttons */}
       <div className="mt-6 flex gap-4">
@@ -181,10 +180,10 @@ const Start = () => {
             <span
               key={index}
               className={` px-5 py-2 rounded-md font-semibold text-white transition-all duration-300 ${currentName === name
-                ? `scale-125` // Apply scale only to selected name
+                ? `scale-125`
                 : "bg-purple-600"
                 }`}
-              style={{ backgroundColor: currentName === name ? highlightColor : '' }} // Apply the dynamic background color
+              style={{ backgroundColor: currentName === name ? highlightColor : '' }}
             >
               {name}
               <button
@@ -218,7 +217,7 @@ const Start = () => {
             }}
           >
             <button className="bg-white text-black font-semibold rounded-xl p-3 hover:opacity-80">
-              View Full-Screen Winner
+              View on Full-Screen
             </button>
           </Link>
         </div>

@@ -93,6 +93,5 @@ Check out the live demo of the project here: https://pickandwin-iota.vercel.app/
 ## Video Explaination
 
 ## TO DO
-- add new line add users ( separated box for adding )
 - add auto button
 - slow down the shuffling and then come down to the chosen one

@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import MadeByMe from "@/app/(components)/MadeByMe";
+import MadeByMe from "@/(components)/MadeByMe"
 
 export default function Home() {
   const [inputValue, setInputValue] = useState<string>("");
@@ -22,29 +22,45 @@ export default function Home() {
   const handleAddName = (): void => {
     if (inputValue.trim() !== "") {
       const newNames = inputValue
-        .split(",")
-        .map((name) => name.trim())
-        .filter((name) => name !== "");
+        .split(/[\n,]/) // Split by both commas and newlines
+        .map((name) => name.trim()) // Trim whitespace from each name
+        .filter((name) => name !== ""); // Remove empty names
 
-      setNameList((prevList) => [...prevList, ...newNames]);
+      setNameList((prevList) => {
+        // Combine current list with new names and remove duplicates
+        const uniqueNames = Array.from(new Set([...prevList, ...newNames]));
+        return uniqueNames;
+      });
+
+      const uniqueNewNames = newNames.filter(
+        (name, index, self) =>
+          self.indexOf(name) === index && !nameList.includes(name)
+      );
+
       setInputValue("");
 
       const message =
-        newNames.length > 1
-          ? `New participants ${newNames.slice(0, 3).join(", ")} and more have been added!`
-          : `New participant ${newNames[0]} has been added!`;
+        uniqueNewNames.length > 1
+          ? `New participants ${uniqueNewNames.slice(0, 3).join(", ")}${uniqueNewNames.length > 3 ? ", and more" : ""
+          } have been added!`
+          : uniqueNewNames.length === 1
+            ? `New participant ${uniqueNewNames[0]} has been added!`
+            : "No new participants were added (all names are duplicates).";
 
       setPopupMessage(message);
     }
   };
 
-  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>): void => {
-    if (event.key === "Enter") {
-      handleAddName();
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Enter" && event.shiftKey) {
+      event.preventDefault(); // Prevent a new line
+      handleAddName(); // Submit the names
     }
+    // Do nothing for regular Enter; allow default behavior
   };
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(event.target.value);
   };
 
@@ -68,7 +84,6 @@ export default function Home() {
 
   return (
     <div className="bg-gradient-to-b from-purple-500 to-purple-900 h-screen flex flex-col justify-center items-center gap-3 relative">
-
       {/* Popup notification */}
       {popupMessage && (
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 text-[10px] md:text-xs lg:text-md bg-purple-300 text-purple-950 px-6 py-2 rounded-md shadow-lg animate-pulse">
@@ -76,63 +91,96 @@ export default function Home() {
         </div>
       )}
 
-      <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white">Pick And Win</h1>
-      <h1 className="text-white w-[300px] md:w-[400px] lg:w-[600px] text-center">Pick and Win helps you choose giveaway winners easily. Just enter names or paste names separated by commas and hit that Start button!</h1>
-      <div className="p-5 bg-black/30 border-2 border-purple-900 rounded-2xl w-96 shadow-lg shadow-black/20">
-        <div className="mb-4 flex justify-between">
-          <input
-            className="rounded-xl p-2 w-[180px] focus:outline-none"
-            type="text"
-            value={inputValue}
-            onChange={handleChange}
-            onKeyDown={handleKeyPress}
-            placeholder="Enter User"
-          />
+      <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-black to-purple-950">
+        Pick And Win
+      </h1>
 
-          {/* Add button */}
-          <button className="bg-purple-600  text-white rounded-full h-[40px] w-[40px] p-3 hover:opacity-80"onClick={handleAddName}>
-            <Image
-              src="/addW.png"
-              height={70}
-              width={70}
-              alt="add"
+      <h1 className="text-white w-[300px] md:w-[400px] lg:w-[600px] text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-950 to-purple-950">
+        Pick and Win helps you choose giveaway winners easily. Just
+        <span className=" text-black m-1">
+          enter names
+        </span>
+        or paste
+        <span className=" text-black m-1">
+          names separated by commas
+        </span>
+        and hit that
+        <span className=" text-black m-1">
+          Start
+        </span>
+        button!</h1>
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+
+        {/* Participants Container */}
+        <div className="p-5 bg-black/30 border-2 border-purple-900 rounded-2xl w-96 shadow-lg shadow-black/20">
+          <div className="bg-purple-950/30 border-2 border-purple-900 rounded-xl p-4 max-h-44 md:max-h-96 overflow-y-auto scrollbar-thin scrollbar- scrollbar-track-violet-500 scrollbar-thumb-white">
+            <h3 className="text-white text-lg font-semibold mb-4 text-center">
+              {nameList.length === 0 ? (
+                <>
+                  Participants List
+                </>
+              ) : (
+                <>
+                  Participants: <span className="animate-pulse">{nameList.length}</span>
+                </>
+              )}
+            </h3>
+            <ul className="flex gap-3 flex-col items-start">
+              {nameList.map((name, index) => (
+                <li className="bg-purple-600 text-white font-semibold px-5 py-2 rounded-md flex justify-between w-full" key={index}>
+                  <span>{name}</span>
+                  <button
+                    onClick={() => handleRemoveName(index)}>
+                    <Image
+                      src="/cross.png"
+                      height={10}
+                      width={10}
+                      alt="cross"
+                    />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Adding Names*/}
+        <div className="p-5 bg-black/30 border-2 border-purple-900 rounded-2xl w-96 shadow-lg shadow-black/20">
+          <div className="mb-4 flex justify-between items-center">
+            <textarea
+              className="rounded-xl p-2 w-full h-80 max-h-44 md:max-h-80 focus:outline-none scrollbar-thin scrollbar- scrollbar-track-violet-500 scrollbar-thumb-white"
+              value={inputValue}
+              onChange={handleChange}
+              onKeyDown={handleKeyPress}
+              placeholder="Enter names, separated by commas or new lines. Press Shift+Enter to submit"
             />
-          </button>
 
-          {/* Reset button */}
-          <button className="bg-pink-600 w-[100px] text-white font-semibold hover:opacity-80 rounded-xl " onClick={handleResetList}>
-            Reset List
-          </button>
+          </div>
+          <div className="flex justify-between">
+            {/* Add button */}
+            <button className="bg-purple-500  text-white rounded-full h-[40px] w-[40px] p-3 hover:shadow-lg hover:shadow-purple-600/30 hover:scale-105 ease-linear duration-75" onClick={handleAddName}>
+              <Image
+                src="/addW.png"
+                height={70}
+                width={70}
+                alt="add"
+              />
+            </button>
+            {/* Reset button */}
+            <button className="bg-pink-600 w-[100px] h-10 text-white font-semibold hover:shadow-lg hover:shadow-pink-600/30 hover:scale-105 ease-linear duration-75 rounded-xl " onClick={handleResetList}>
+              Reset List
+            </button>
+            <Link href={{ pathname: "/start", query: { names: nameList.join(",") }, }}>
+              <button className="bg-white text-black font-semibold rounded-xl w-[180px] p-2 hover:shadow-lg hover:shadow-white/30 hover:scale-105 ease-linear duration-75">
+                Start
+              </button>
+            </Link>
+          </div>
+
         </div>
-
-        <div className="bg-purple-950/30 border-2 border-purple-900 rounded-xl p-4 max-h-80 overflow-y-auto scrollbar-thin scrollbar- scrollbar-track-violet-500 scrollbar-thumb-white mb-4 ">
-          <h3 className="text-white text-lg font-semibold mb-4 text-center">Participants List</h3>
-          <ul className="flex gap-3 flex-col items-start">
-            {nameList.map((name, index) => (
-              <li className="bg-purple-600 text-white font-semibold px-5 py-2 rounded-md flex justify-between w-full" key={index}>
-                <span>{name}</span>
-                <button
-                  onClick={() => handleRemoveName(index)}>
-                  <Image
-                    src="/cross.png"
-                    height={10}
-                    width={10}
-                    alt="cross"
-                  />
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <Link href={{pathname: "/start", query: { names: nameList.join(",") },}}> 
-          <button className="bg-white text-black font-semibold rounded-xl w-full p-2 hover:opacity-80">
-            Start
-          </button>
-        </Link>
 
       </div>
-      <MadeByMe/>
+      <MadeByMe />
     </div>
   );
 }
