@@ -93,7 +93,7 @@ export default function Home() {
         Pick And Win
       </h1>
 
-      <h1 className="text-white w-[300px] md:w-[400px] lg:w-[600px] text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-950 to-purple-950">
+      <h1 className="w-[300px] md:w-[400px] lg:w-[600px] text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-950 to-purple-950">
         Pick and Win helps you choose giveaway winners easily. Just
         <span className=" text-black m-1">
           enter names
@@ -178,7 +178,9 @@ export default function Home() {
         </div>
 
       </div>
-      <MadeByMe />
+      <div className="absolute bottom-4 w-[250px]">
+        <MadeByMe />
+      </div>
     </div>
   );
 }

@@ -43,35 +43,35 @@ const Start = () => {
     setIsChoosing(true);
     const totalTime = timeoutDuration * 1000; // Total time in milliseconds
     const fastTime = totalTime * 0.8;
-    
+
     let timeElapsed = 0;
-  
+
     const fastInterval = setInterval(() => {
       const randomIndex = Math.floor(Math.random() * names.length);
       setCurrentName(names[randomIndex]);
-  
+
       timeElapsed += 70; //
       if (timeElapsed >= fastTime) {
         clearInterval(fastInterval);
         startSlowShuffle();
       }
     }, 70);
-  
+
     const startSlowShuffle = () => {
       const slowInterval = setInterval(() => {
         const randomIndex = Math.floor(Math.random() * names.length);
         setCurrentName(names[randomIndex]);
-  
-        timeElapsed += 400; 
+
+        timeElapsed += 400;
         if (timeElapsed >= totalTime) {
-          clearInterval(slowInterval); 
+          clearInterval(slowInterval);
           const randomIndex = Math.floor(Math.random() * names.length);
           const selectedName = names[randomIndex];
-  
+
           setChosenName(selectedName);
           setCurrentName(selectedName);
           setIsChoosing(false);
-  
+
           if (names.length === 2) {
             setNames((prevNames) => prevNames.filter((name) => name !== selectedName));
             setChosenName(null);
@@ -81,7 +81,7 @@ const Start = () => {
       }, 400);
     };
   };
-  
+
 
   const handleRemove = async () => {
     if (!chosenName) return;
@@ -105,7 +105,9 @@ const Start = () => {
   return (
     <div className="bg-gradient-to-b from-purple-500 to-purple-900 w-screen h-screen flex flex-col justify-center items-center relative">
 
-      <HomeButton color="bg-purple-800" />
+      <div className="top-5 left-5">
+        <HomeButton color="bg-purple-800" />
+      </div>
       <div className="absolute top-5 transform right-5 text-white">
         <button
           className="bg-purple-800 rounded-full p-2"
@@ -239,7 +241,9 @@ const Start = () => {
           </Link>
         </div>
       )}
-      <MadeByMe />
+      <div className="bottom-4 w-[250px]">
+        <MadeByMe />
+      </div>
     </div>
   );
 }

@@ -6,7 +6,7 @@ export default function MadeByMe() {
             Made by💜
             <Link href="https://www.youtube.com/channel/UC9UQVp8grhcVatbMcf0sa5w"
                 target="_blank">
-                <button className="animate-pulse hover:animate-bounce underline">
+                <button className="animate-pulse">
                     @itsmeprinceyt
                 </button>
             </Link>
