@@ -6,7 +6,7 @@ Built with Next.js and styled using Tailwind CSS, this project combines performa
 
 ## Features
 
-- **Participant Management:** Easily add names one by one or in bulk using a comma-separated format. You can remove individual names or reset the entire list with a single click.
+- **Participant Management:** Easily add names one by one or in bulk using a comma-separated format or add names in each lines. You can remove individual names or reset the entire list with a single click.
 - **Interactive Shuffle System:** Start the shuffle to randomly pick a name within a customizable timer (default 3 seconds). Experience the excitement as names are dynamically highlighted during the shuffle.
 - **Flexible Settings:** Use the settings button to adjust the shuffle timer duration or highlighted user background color for a more personalized experience.
 - **Winner Announcement:** When only two participants remain, the shuffle automatically picks the winner, removing the selected name and redirecting to a dedicated winner page with their name displayed prominently.
@@ -16,6 +16,8 @@ Built with Next.js and styled using Tailwind CSS, this project combines performa
 
 - **Next.js**: A React framework for building server-rendered and static web applications.
 - **Tailwind CSS**: A utility-first CSS framework that enables rapid UI development.
+
+- **tailwind-scrollbar**: `npm package` which is used to change scrollbar style.
 
 ## Installation
 
@@ -55,17 +57,6 @@ Built with Next.js and styled using Tailwind CSS, this project combines performa
 - Easily adapt the design and functionality to suit your needs by modifying components styled with Tailwind CSS.
 - Add additional features or integrate with other tools as per your requirements.
 
-## Changes Which You Can Make
-
-1. You can change the shuffle speed
-    ```bash
-    setIsChoosing(true);
-        const interval = setInterval(() => {
-        const randomIndex = Math.floor(Math.random() * names.length);
-        setCurrentName(names[randomIndex]);
-    }, 70);
-    ```
-    Change `70` to your desired speed
 
 ## Contributing
 
