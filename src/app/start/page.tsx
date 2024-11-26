@@ -156,7 +156,7 @@ const Start = () => {
             </button>
 
             {/* Slider for Shuffle Duration duration */}
-            <div className="w-[320px] bg-black/30 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg">
+            <div className="w-[320px] bg-black/30 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-2">
               <div className="text-4xl font-bold">Shuffle Time</div>
               <div className="flex flex-col items-center">
                 <label htmlFor="timeoutSlider" className="text-white font-bold mb-2"> {timeoutDuration} seconds
@@ -168,7 +168,7 @@ const Start = () => {
                   max="60"
                   value={timeoutDuration}
                   onChange={(e) => setTimeoutDuration(Number(e.target.value))}
-                  className="w-full h-2 bg-purple-300 rounded-lg appearance-none cursor-pointer active:bg-purple-400"
+                  className="w-[150px] h-2 bg-purple-300 rounded-lg appearance-none cursor-pointer active:bg-purple-400"
                 />
               </div>
             </div>
