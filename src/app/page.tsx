@@ -145,7 +145,7 @@ export default function Home() {
         {/* Adding Names*/}
         <div className="relative p-5 bg-black/30 border-2 border-purple-900 rounded-2xl w-96 shadow-lg shadow-black/20">
           {nameList.length === 0 && (
-            <div className="absolute bottom-20 left-7 animate-bounce bg-purple-500 shadow-lg shadow-purple-800/30 p-1 px-2 rounded-md text-purple-200 text-[12px] w-[325px] text-center">
+            <div className="absolute bottom-20 left-7 animate-bounce bg-purple-500 shadow-lg shadow-purple-800/30 p-1 px-2 rounded-md text-purple-200 text-[12px] w-[325px] text-center pointer-events-none">
               Press &apos;Shift+Enter&apos; to Enter
             </div>
           )}

@@ -164,7 +164,7 @@ const Start = () => {
 
       {/* Shuffle Container */}
       <div className="w-full flex justify-center items-center">
-        <div className="text-white font-bold text-2xl px-8 py-4 rounded-md shadow-lg shadow-black/20"
+        <div className="text-white font-bold text-2xl px-8 py-4 rounded-md shadow-lg shadow-black/20 pointer-events-none"
           style={{ backgroundColor: highlightColor }}>
           {currentName || "Who Will Be Chosen?"}
         </div>

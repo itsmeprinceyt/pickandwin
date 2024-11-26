@@ -22,7 +22,7 @@ const Winner = () => {
                 <div className="top-5 left-5">
                     <HomeButton color="bg-green-800" />
                 </div>
-                <div className="text-center animate-bounce">
+                <div className="text-center animate-bounce pointer-events-none">
                     <h1 className="text-white text-4xl md:text-6xl font-bold mb-6">🥳 The Winner is 🎉</h1>
                     <div className="bg-white text-green-900 text-3xl md:text-5xl lg:text-8xl font-extrabold p-8 rounded-xl shadow-lg">
                         {winnerName}
