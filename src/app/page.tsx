@@ -143,14 +143,19 @@ export default function Home() {
         </div>
 
         {/* Adding Names*/}
-        <div className="p-5 bg-black/30 border-2 border-purple-900 rounded-2xl w-96 shadow-lg shadow-black/20">
+        <div className="relative p-5 bg-black/30 border-2 border-purple-900 rounded-2xl w-96 shadow-lg shadow-black/20">
+          {nameList.length === 0 && (
+            <div className="absolute bottom-20 left-7 animate-bounce bg-purple-500 shadow-lg shadow-purple-800/30 p-1 px-2 rounded-md text-purple-200 text-[12px] w-[325px] text-center">
+              Press &apos;Shift+Enter&apos; to Enter
+            </div>
+          )}
           <div className="mb-4 flex justify-between items-center">
             <textarea
               className="rounded-xl p-2 w-full h-80 max-h-44 md:max-h-80 focus:outline-none scrollbar-thin scrollbar- scrollbar-track-violet-500 scrollbar-thumb-white"
               value={inputValue}
               onChange={handleChange}
               onKeyDown={handleKeyPress}
-              placeholder="Enter names, separated by commas or new lines. Press Shift+Enter to submit"
+              placeholder="Enter names, separated by commas or new lines."
             />
 
           </div>
