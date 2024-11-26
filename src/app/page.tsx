@@ -22,12 +22,11 @@ export default function Home() {
   const handleAddName = (): void => {
     if (inputValue.trim() !== "") {
       const newNames = inputValue
-        .split(/[\n,]/) // Split by both commas and newlines
-        .map((name) => name.trim()) // Trim whitespace from each name
-        .filter((name) => name !== ""); // Remove empty names
+        .split(/[\n,]/)
+        .map((name) => name.trim())
+        .filter((name) => name !== "");
 
       setNameList((prevList) => {
-        // Combine current list with new names and remove duplicates
         const uniqueNames = Array.from(new Set([...prevList, ...newNames]));
         return uniqueNames;
       });
@@ -54,10 +53,9 @@ export default function Home() {
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && event.shiftKey) {
-      event.preventDefault(); // Prevent a new line
-      handleAddName(); // Submit the names
+      event.preventDefault();
+      handleAddName();
     }
-    // Do nothing for regular Enter; allow default behavior
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {

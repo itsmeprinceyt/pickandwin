@@ -91,7 +91,3 @@ If you'd like to contribute to this project:
 Check out the live demo of the project here: https://pickandwin-iota.vercel.app/
 
 ## Video Explaination
-
-## TO DO
-- add auto button
-- slow down the shuffling and then come down to the chosen one

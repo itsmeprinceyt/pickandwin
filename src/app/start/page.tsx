@@ -18,8 +18,7 @@ const Start = () => {
   const [chosenName, setChosenName] = useState<string | null>(null);
   const [timeoutDuration, setTimeoutDuration] = useState(3);
   const [toggle, setToggle] = useState(false);
-
-  const [highlightColor, setHighlightColor] = useState("#ff0000"); // Default color (Red)
+  const [highlightColor, setHighlightColor] = useState("#ff0000");
 
 
   useEffect(() => {
@@ -41,30 +40,48 @@ const Start = () => {
 
   const handleStart = () => {
     if (names.length === 0 || isChoosing) return;
-
     setIsChoosing(true);
-    const interval = setInterval(() => {
+    const totalTime = timeoutDuration * 1000; // Total time in milliseconds
+    const fastTime = totalTime * 0.8;
+    
+    let timeElapsed = 0;
+  
+    const fastInterval = setInterval(() => {
       const randomIndex = Math.floor(Math.random() * names.length);
       setCurrentName(names[randomIndex]);
-    }, 70);
-
-    setTimeout(() => {
-      clearInterval(interval);
-      const randomIndex = Math.floor(Math.random() * names.length);
-      const selectedName = names[randomIndex];
-
-      setChosenName(selectedName);
-      setCurrentName(selectedName);
-      setIsChoosing(false);
-
-      if (names.length === 2) {
-        setNames((prevNames) => prevNames.filter((name) => name !== selectedName));
-        setChosenName(null);
-        setCurrentName(null);
+  
+      timeElapsed += 70; //
+      if (timeElapsed >= fastTime) {
+        clearInterval(fastInterval);
+        startSlowShuffle();
       }
-
-    }, timeoutDuration * 1000); // Use slider in the website to change time duration of shuffling.
+    }, 70);
+  
+    const startSlowShuffle = () => {
+      const slowInterval = setInterval(() => {
+        const randomIndex = Math.floor(Math.random() * names.length);
+        setCurrentName(names[randomIndex]);
+  
+        timeElapsed += 400; 
+        if (timeElapsed >= totalTime) {
+          clearInterval(slowInterval); 
+          const randomIndex = Math.floor(Math.random() * names.length);
+          const selectedName = names[randomIndex];
+  
+          setChosenName(selectedName);
+          setCurrentName(selectedName);
+          setIsChoosing(false);
+  
+          if (names.length === 2) {
+            setNames((prevNames) => prevNames.filter((name) => name !== selectedName));
+            setChosenName(null);
+            setCurrentName(null);
+          }
+        }
+      }, 400);
+    };
   };
+  
 
   const handleRemove = async () => {
     if (!chosenName) return;
@@ -120,8 +137,8 @@ const Start = () => {
               <input
                 id="timeoutSlider"
                 type="range"
-                min="0"
-                max="59"
+                min="1"
+                max="60"
                 value={timeoutDuration}
                 onChange={(e) => setTimeoutDuration(Number(e.target.value))}
                 className="w-full h-2 bg-purple-300 rounded-lg appearance-none cursor-pointer active:bg-purple-400"

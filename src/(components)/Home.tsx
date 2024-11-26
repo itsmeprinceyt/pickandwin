@@ -10,7 +10,7 @@ export default function Home({ color }: HomeProps) {
         <div className="absolute top-5 transform left-5 text-white">
             <Link href="/">
                 <button
-                    className={`rounded-full p-2 ${color}`} // Dynamically apply the color prop
+                    className={`rounded-full p-2 ${color}`}
                 >
                     <Image
                         src="/home2.png"
