@@ -57,22 +57,22 @@ const Start = () => {
 
     const fastInterval = setInterval(() => {
       const randomIndex = Math.floor(Math.random() * names.length);
-      setCurrentName(names[randomIndex]);
+      setCurrentName(names[randomIndex]); // Name is selected every interval
 
-      timeElapsed += 70; //
-      if (timeElapsed >= fastTime) {
-        clearInterval(fastInterval);
+      timeElapsed += 70; // To keep increasing the timeElapsed until it has reached above fastTime
+      if (timeElapsed >= fastTime) { // When fastTime shuffle is done, clear the fast shuffle and move to slow shuffle
+        clearInterval(fastInterval); 
         startSlowShuffle();
       }
     }, 70);
 
     const startSlowShuffle = () => {
       const slowInterval = setInterval(() => {
-        const randomIndex = Math.floor(Math.random() * names.length);
+        const randomIndex = Math.floor(Math.random() * names.length); // Name is selected every interval
         setCurrentName(names[randomIndex]);
 
-        timeElapsed += 400;
-        if (timeElapsed >= totalTime) {
+        timeElapsed += 400; // You can increase this to make the slow shuffle even longer
+        if (timeElapsed >= totalTime) { // When the total time is above timeoutDuration
           clearInterval(slowInterval);
           const randomIndex = Math.floor(Math.random() * names.length);
           const selectedName = names[randomIndex];
@@ -87,12 +87,12 @@ const Start = () => {
             setCurrentName(null);
           }
         }
-      }, 400);
+      }, 400); // You can increase this to make the slow shuffle even longer
     };
   };
 
 
-  const handleRemove = async () => {
+  const handleRemove = async () => { // Removing the name from button
     if (!chosenName) return;
     setNames((prevNames) => prevNames.filter((name) => name !== chosenName));
     setChosenName(null);
@@ -107,7 +107,7 @@ const Start = () => {
     }
   }
 
-  const handleRemoveName = (index: number): void => {
+  const handleRemoveName = (index: number): void => { // Removing the name from Participants List
     setNames((prevList) => prevList.filter((_, i) => i !== index));
   };
 
