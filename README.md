@@ -97,3 +97,5 @@ If you'd like to contribute to this project:
 Check out the live demo of the project here: https://pickandwin-iota.vercel.app/
 
 ## Video Explaination
+
+https://youtu.be/gBu9qU5doiw
