@@ -20,6 +20,8 @@ const SpinWheel: React.FC = () => {
 
     const [isChoosing, setIsChoosing] = useState<boolean>(false);
     const [angleOffset, setAngleOffset] = useState<number>(0);
+    const [isIdle, setIsIdle] = useState(true); // Track idle state
+    const idleSpeed = 0.002;
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [mode, setMode] = useState("lastOneStanding");
     const [autoRemove, setAutoRemove] = useState(false);
@@ -110,6 +112,17 @@ const SpinWheel: React.FC = () => {
             window.removeEventListener("resize", updateCanvasSize);
         };
     }, []);
+
+    useEffect(() => {
+        if (!isIdle) return;
+        let idleAnimation: number;
+        const animateIdle = () => {
+            setAngleOffset((prevAngle) => (prevAngle + idleSpeed) % (2 * Math.PI));
+            idleAnimation = requestAnimationFrame(animateIdle);
+        };
+        idleAnimation = requestAnimationFrame(animateIdle);
+        return () => cancelAnimationFrame(idleAnimation);
+    }, [isIdle]);
 
     useEffect(() => {
         if (!isChoosing && currentIndex !== undefined) {
@@ -242,6 +255,8 @@ const SpinWheel: React.FC = () => {
 
     const shuffleWheel = () => {
         if (isChoosing || names.length === 0) return;
+        setIsIdle(false);
+        setAngleOffset(0);
         setIsChoosing(true);
 
         const sliceAngle = (2 * Math.PI) / names.length;
@@ -564,7 +579,7 @@ const SpinWheel: React.FC = () => {
                         </div>
                         <canvas ref={canvasRef} className=" border-8 border-white rounded-full shadow-lg shadow-black/30" />
                     </div>
-                    
+
                 </div>
             </div>
         </div >
