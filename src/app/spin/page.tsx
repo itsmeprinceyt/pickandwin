@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, Suspense } from "react";
 import HomeButton from "@/(components)/Home";
 import Image from "next/image";
 
@@ -459,4 +459,12 @@ const SpinWheel: React.FC = () => {
     );
 };
 
-export default SpinWheel;
+const StartWheelWithSuspense = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SpinWheel />
+        </Suspense>
+    );
+};
+
+export default StartWheelWithSuspense;

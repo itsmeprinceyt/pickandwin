@@ -41,7 +41,7 @@ const Shuffle = () => {
       router.push(`/winner?name=${encodeURIComponent(chosenName)}`);
     }
   }, [mode, chosenName, router]);
-  
+
 
   useEffect(() => {
     setTextColor(isBrightColor(highlightColor) ? "black" : "white");
@@ -61,7 +61,7 @@ const Shuffle = () => {
 
       timeElapsed += 70; // To keep increasing the timeElapsed until it has reached above fastTime
       if (timeElapsed >= fastTime) { // When fastTime shuffle is done, clear the fast shuffle and move to slow shuffle
-        clearInterval(fastInterval); 
+        clearInterval(fastInterval);
         startSlowShuffle();
       }
     }, 70);
