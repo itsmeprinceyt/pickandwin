@@ -9,6 +9,9 @@ export default {
   ],
   theme: {
     extend: {
+        animation: {
+          "spin-slow": "spin 45s linear infinite",
+        },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -16,6 +19,7 @@ export default {
         'scrollbar-thumb': '#888',
         'scrollbar-thumb-hover': '#555',
       },
+      
     },
   },
   plugins: [

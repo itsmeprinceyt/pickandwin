@@ -7,7 +7,7 @@ import Image from "next/image";
 import MadeByMe from "@/(components)/MadeByMe"
 import HomeButton from "@/(components)/Home";
 
-const Start = () => {
+const Shuffle = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const namesParam = searchParams.get("names");
@@ -33,7 +33,6 @@ const Start = () => {
   useEffect(() => {
     if (names.length === 1) {
       router.push(`/winner?name=${encodeURIComponent(names[0])}`);
-
     }
   }, [names, router]);
 
@@ -42,6 +41,7 @@ const Start = () => {
       router.push(`/winner?name=${encodeURIComponent(chosenName)}`);
     }
   }, [mode, chosenName, router]);
+  
 
   useEffect(() => {
     setTextColor(isBrightColor(highlightColor) ? "black" : "white");
@@ -165,7 +165,7 @@ const Start = () => {
                   id="timeoutSlider"
                   type="range"
                   min="1"
-                  max="60"
+                  max="120"
                   value={timeoutDuration}
                   onChange={(e) => setTimeoutDuration(Number(e.target.value))}
                   className="w-[150px] h-2 bg-purple-300 rounded-lg appearance-none cursor-pointer active:bg-purple-400"
@@ -331,7 +331,7 @@ const Start = () => {
 const StartWithSuspense = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <Start />
+      <Shuffle />
     </Suspense>
   );
 };

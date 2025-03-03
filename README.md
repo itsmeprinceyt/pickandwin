@@ -16,9 +16,12 @@ Built with Next.js and styled using Tailwind CSS, this project combines performa
   Personalize your experience with adjustable shuffle timers and customizable highlight colors. Access these options seamlessly through the settings menu.
 
 - **Winner Selection Modes**  
-  Choose between two distinct winner selection modes:
+  Choose between different winner selection modes:
   - **Last One Standing**: Participants are gradually removed from the list until only one winner remains.
   - **Random Winner**: A winner is selected randomly in a single shuffle.  
+  - **Shuffle Mode**: The names are shuffled, and one name is selected randomly.
+  - **Wheel Mode**: A circular wheel is displayed, rotates, and selects one winner.
+  
   Toggle between these modes to suit the nature of your event.
 
 - **Winner Announcement**  
@@ -31,7 +34,6 @@ Built with Next.js and styled using Tailwind CSS, this project combines performa
 
 - **Next.js**: A React framework for building server-rendered and static web applications.
 - **Tailwind CSS**: A utility-first CSS framework that enables rapid UI development.
-
 - **tailwind-scrollbar**: `npm package` which is used to change scrollbar style.
 
 ## Installation
@@ -62,16 +64,15 @@ Built with Next.js and styled using Tailwind CSS, this project combines performa
 
 1. **Access the Application**: Open the application in your browser at [http://localhost:3000](http://localhost:3000).  
 2. **Manage Participants**: Add participant names individually or in bulk (comma-separated). Remove specific names or reset the list entirely before starting the shuffle.  
-3. **Start the Shuffle**: Click "Start" to begin the shuffle, which randomly selects a participant within the set timer. Use the settings button to customize the shuffle timer duration.  
-4. **Winner Announcement**: Once the shuffle between the last two participants concludes, the winner is displayed on a dedicated page. Return to the home page to start over or manage new participants.  
-5. **Customization**: Adjust styles or functionality as needed using the flexible Tailwind CSS setup.  
-
+3. **Choose Winner Selection Mode**: Select between Last One Standing, Random Winner, Shuffle, or Wheel mode.  
+4. **Start the Selection**: Click "Start" to begin the process based on the selected mode.  
+5. **Winner Announcement**: Once the process concludes, the winner is displayed on a dedicated page. Return to the home page to start over or manage new participants.  
+6. **Customization**: Adjust styles or functionality as needed using the flexible Tailwind CSS setup.  
 
 ## Customization
 
 - Easily adapt the design and functionality to suit your needs by modifying components styled with Tailwind CSS.
 - Add additional features or integrate with other tools as per your requirements.
-
 
 ## Contributing
 
@@ -96,6 +97,6 @@ If you'd like to contribute to this project:
 
 Check out the live demo of the project here: https://pickandwin-iota.vercel.app/
 
-## Video Explaination
+## Video Explanation
 
 https://youtu.be/gBu9qU5doiw

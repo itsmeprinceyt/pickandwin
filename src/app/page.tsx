@@ -174,10 +174,16 @@ export default function Home() {
               Reset List
             </button>
 
-            {/* Start button */}
-            <Link href={{pathname: "/start",query: { names: nameList.join(",") },}}>
-              <button className={`bg-white text-black font-semibold rounded-xl w-[180px] p-2 ${nameList.length < 2 ? "opacity-50 cursor-not-allowed" : "hover:shadow-lg hover:shadow-white/30 hover:scale-105 ease-linear duration-75"}`}disabled={nameList.length < 2}>
-                Start
+            {/* Shuffle */}
+            <Link href={{pathname: "/shuffle",query: { names: nameList.join(",") },}}>
+              <button className={`bg-white text-black font-semibold rounded-xl w-[90px] p-2 ${nameList.length < 2 ? "opacity-50 cursor-not-allowed" : "hover:shadow-lg hover:shadow-white/30 hover:scale-105 ease-linear duration-75"}`}disabled={nameList.length < 2}>
+                Shuffle
+              </button>
+            </Link>
+            {/* Spin the Wheel */}
+            <Link href={{pathname: "/spin",query: { names: nameList.join(",") },}}>
+              <button className={`bg-white text-black font-semibold rounded-xl w-[90px] p-2 ${nameList.length < 2 ? "opacity-50 cursor-not-allowed" : "hover:shadow-lg hover:shadow-white/30 hover:scale-105 ease-linear duration-75"}`}disabled={nameList.length < 2}>
+                Wheel
               </button>
             </Link>
           </div>
