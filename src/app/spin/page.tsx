@@ -22,6 +22,13 @@ const SpinWheel: React.FC = () => {
     const [autoRemoveText, setAutoRemoveText] = useState("Auto-Remove: OFF");
     const [timeoutDuration, setTimeoutDuration] = useState(3);
     const [toggle, setToggle] = useState(false);
+    const [showPopup, setShowPopup] = useState(false);
+    useEffect(() => {
+        if (!isChoosing && currentIndex !== undefined) {
+            setShowPopup(true); // Show popup when spinning stops
+        }
+    }, [isChoosing, currentIndex]);
+
     const [canvasSize, setCanvasSize] = useState(0);
 
     const [highlightColor1, setHighlightColor1] = useState<string>(() => localStorage.getItem("highlightColor1") || "#ff0000");
@@ -298,7 +305,7 @@ const SpinWheel: React.FC = () => {
                             </button>
 
                             {/* Spin duration */}
-                            <div className="w-[320px] bg-black/30 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-2">
+                            <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-2">
                                 <div className="text-4xl font-bold">Spin Time</div>
                                 <div className="flex flex-col items-center">
                                     <label htmlFor="timeoutSlider" className="text-white font-bold mb-2"> {timeoutDuration} seconds
@@ -307,7 +314,7 @@ const SpinWheel: React.FC = () => {
                                         id="timeoutSlider"
                                         type="range"
                                         min="1"
-                                        max="120"
+                                        max="60"
                                         value={timeoutDuration}
                                         onChange={(e) => setTimeoutDuration(Number(e.target.value))}
                                         className="w-[150px] h-2 bg-purple-300 rounded-lg appearance-none cursor-pointer active:bg-purple-400"
@@ -316,7 +323,7 @@ const SpinWheel: React.FC = () => {
                             </div>
 
 
-                            <div className="w-[320px] bg-black/30 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-4">
+                            <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-4">
                                 {/* Slice Colors */}
                                 <div className="text-4xl font-bold">Slice Colors</div>
                                 <div className="flex gap-4">
@@ -369,7 +376,7 @@ const SpinWheel: React.FC = () => {
                             </div>
 
                             {/* Auto - Remove */}
-                            <div className="w-[320px] bg-black/30 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center ">
+                            <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center ">
                                 <button
                                     className={`px-4 py-2 rounded-lg font-semibold shadow-lg ${autoRemove
                                         ? "bg-lime-500 shadow-lime-500/30"
@@ -382,7 +389,7 @@ const SpinWheel: React.FC = () => {
                             </div>
 
                             {/* Mode Selector */}
-                            <div className="w-[320px] bg-black/30 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-2">
+                            <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-2">
                                 <div className="text-4xl font-bold">Choose Mode</div>
                                 <div className="flex flex-col items-start gap-1" id="mode-selector">
                                     <label
@@ -424,6 +431,37 @@ const SpinWheel: React.FC = () => {
                 {/* Main Container */}
                 <div className="flex flex-col items-center gap-5">
 
+                    <div className="z-10">
+                        {showPopup && currentIndex !== undefined && (
+                            <div className="fixed inset-0 flex items-center justify-center bg-black/50">
+                                <div className="p-8 rounded-lg shadow-lg text-center relative bg-black/90 border-2 border-black shadow-black/50 flex items-center flex-col gap-4">
+                                    <div className="flex flex-col text-white">
+                                        <p className="font-extralight ">
+                                            Selected user is:
+                                        </p>
+                                        <p className="text-2xl font-semibold">{names[currentIndex]}</p>
+                                    </div>
+
+                                    <div className="flex gap-4">
+                                        <button
+                                            className="bg-white shadow-lg shadow-white/30 px-4 py-2 rounded-md hover:scale-105"
+                                            onClick={() => setShowPopup(false)}
+                                        >
+                                            Close
+                                        </button>
+                                        <button
+                                            className="bg-red-500 shadow-lg shadow-red-500/30 text-white px-4 py-2 rounded-md hover:scale-105"
+                                            onClick={() => {
+                                                removeName(currentIndex);
+                                                setShowPopup(false);
+                                            }}
+                                        >Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
                     {/* Wheel */}
                     <div className="relative">
 
@@ -441,18 +479,6 @@ const SpinWheel: React.FC = () => {
                     </div>
 
                     {/* Button Div Below Wheel */}
-                    {!autoRemove && (
-                        <div className="flex gap-5">
-                            <button
-                                className="bg-pink-500 hover:shadow-lg hover:shadow-pink-500/30 hover:scale-105 ease-linear duration-75 w-[125px] text-white font-semibold rounded-full px-8 py-3 shadow-lg shadow-black/10 disabled:opacity-50 disabled:cursor-not-allowed"
-                                onClick={() => currentIndex !== undefined && removeName(currentIndex)}
-                                disabled={currentIndex === undefined || isChoosing}
-                            >
-                                {isChoosing ? "Wait" : "Remove"}
-                            </button>
-                        </div>
-                    )}
-
                 </div>
             </div>
         </div >
