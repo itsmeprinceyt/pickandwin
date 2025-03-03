@@ -1,3 +1,9 @@
+# TO DO
+- improve ui ( make custom arrow , add party tada effect)
+- fix spin timer
+- Improve Slice Colors Menu ( per line  Pointer Color, Participants Color)
+- Template Options
+
 # Pick And Drop
 
 Pick and Win helps you choose giveaway winners easily. Just add participant names, shuffle them, and pick a winner at random. It's perfect for content creators running giveaways and makes selecting a fair winner quick and simple.

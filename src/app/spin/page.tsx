@@ -13,22 +13,19 @@ const SpinWheel: React.FC = () => {
     const [names, setNames] = useState<string[]>([]);
     const [currentName, setCurrentName] = useState<string | null>(null);
     const [currentIndex, setCurrentIndex] = useState<number>();
+    const lastIndexRef = useRef<number>(-1);
+    const currentIndexRef = useRef<number>(0);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+
     const [isChoosing, setIsChoosing] = useState<boolean>(false);
     const [angleOffset, setAngleOffset] = useState<number>(0);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-
     const [mode, setMode] = useState("lastOneStanding");
     const [autoRemove, setAutoRemove] = useState(false);
     const [autoRemoveText, setAutoRemoveText] = useState("Auto-Remove: OFF");
     const [timeoutDuration, setTimeoutDuration] = useState(3);
     const [toggle, setToggle] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
-    useEffect(() => {
-        if (!isChoosing && currentIndex !== undefined) {
-            setShowPopup(true); // Show popup when spinning stops
-        }
-    }, [isChoosing, currentIndex]);
-
     const [canvasSize, setCanvasSize] = useState(0);
 
     const [highlightColor1, setHighlightColor1] = useState<string>(() => localStorage.getItem("highlightColor1") || "#ff0000");
@@ -66,7 +63,21 @@ const SpinWheel: React.FC = () => {
     useEffect(() => {
         if (names.length === 1) {
             router.push(`/winner?name=${encodeURIComponent(names[0])}`);
+        }
+    }, [names, router]);
 
+    useEffect(() => {
+        if (namesParam) {
+            const decodedNames = decodeURIComponent(namesParam).split(",");
+            setNames(decodedNames);
+        } else {
+            router.push("/");
+        }
+    }, [namesParam, router]);
+
+    useEffect(() => {
+        if (names.length === 1) {
+            router.push(`/winner?name=${encodeURIComponent(names[0])}`);
         }
     }, [names, router]);
 
@@ -100,19 +111,15 @@ const SpinWheel: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (namesParam) {
-            const decodedNames = decodeURIComponent(namesParam).split(",");
-            setNames(decodedNames);
-        } else {
-            router.push("/");
+        if (!isChoosing && currentIndex !== undefined) {
+            setShowPopup(true);
         }
-    }, [namesParam, router]);
+    }, [isChoosing, currentIndex]);
 
     useEffect(() => {
-        if (names.length === 1) {
-            router.push(`/winner?name=${encodeURIComponent(names[0])}`);
-        }
-    }, [names, router]);
+        audioRef.current = new Audio("/sound/tick.mp3");
+        audioRef.current.load();
+    }, []);
 
     const handleSettings = () => {
         if (toggle) {
@@ -176,8 +183,7 @@ const SpinWheel: React.FC = () => {
             ctx.arc(centerX, centerY, radius, startAngle, endAngle);
             ctx.closePath();
             ctx.fill();
-            ctx.strokeStyle = "#fff";
-            ctx.lineWidth = 1;
+            ctx.strokeStyle = "transparent";
             ctx.stroke();
 
 
@@ -186,7 +192,7 @@ const SpinWheel: React.FC = () => {
             ctx.rotate(startAngle + angleStep / 2);
             ctx.textAlign = "right";
             ctx.fillStyle = participantsColor;
-            ctx.font = `${Math.max(12, canvasSize / 50)}px Arial`;
+            ctx.font = `bold ${Math.max(12, canvasSize / 35)}px Arial`;
             ctx.fillText(name, radius - 10, 5);
             ctx.restore();
         });
@@ -224,7 +230,6 @@ const SpinWheel: React.FC = () => {
         const spinTime = timeoutDuration * 1000;
         const friction = Math.pow(0.99, 3 / timeoutDuration);
         const start = performance.now();
-
         const animateSpin = (time: number) => {
             const elapsed = time - start;
             const progress = elapsed / spinTime;
@@ -234,6 +239,20 @@ const SpinWheel: React.FC = () => {
             ang += angVel;
             ang %= 2 * Math.PI;
             setAngleOffset(ang);
+
+            const arrowAngle = (0 - ang + 2 * Math.PI) % (2 * Math.PI);
+            const newIndex = Math.floor(arrowAngle / sliceAngle) % names.length;
+
+            if (newIndex !== lastIndexRef.current) {
+                if (audioRef.current) {
+                    const sound = audioRef.current.cloneNode() as HTMLAudioElement;
+                    sound.play().catch((err) => console.log("Sound Error:", err));
+                }
+            }
+
+            currentIndexRef.current = newIndex;
+            lastIndexRef.current = newIndex;
+
             if (angVel > 0) {
                 requestAnimationFrame(animateSpin);
             } else if (mode === "randomWinner") {
@@ -254,7 +273,6 @@ const SpinWheel: React.FC = () => {
                 }, 400);
             }
         };
-
         requestAnimationFrame(animateSpin);
     };
 
@@ -446,8 +464,10 @@ const SpinWheel: React.FC = () => {
                     </div>
                 )}
                 {/* Main Container */}
-                <div className="flex flex-col items-center gap-5">
-
+                <div className="flex flex-col items-center gap-2">
+                    <div className="text-4xl font-semibold bg-black/30 p-2 px-6 rounded-lg text-center flex justify-center items-center" style={{ color: participantsColor }}>
+                        {names[currentIndexRef.current] || ""}
+                    </div>
                     <div className="z-10">
                         {showPopup && currentIndex !== undefined && (
                             <div className="fixed inset-0 flex items-center justify-center bg-black/50">
@@ -492,7 +512,7 @@ const SpinWheel: React.FC = () => {
                                 {isChoosing ? "Spinning" : "Spin"}
                             </button>
                         </div>
-                        <canvas ref={canvasRef} className=" border border-white rounded-full shadow-lg shadow-black/30" />
+                        <canvas ref={canvasRef} className=" border-8 border-white rounded-full shadow-lg shadow-black/30" />
                     </div>
                 </div>
             </div>
