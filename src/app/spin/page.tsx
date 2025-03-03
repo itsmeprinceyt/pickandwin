@@ -477,8 +477,6 @@ const SpinWheel: React.FC = () => {
                         </div>
                         <canvas ref={canvasRef} className=" border border-white rounded-full shadow-lg shadow-black/30" />
                     </div>
-
-                    {/* Button Div Below Wheel */}
                 </div>
             </div>
         </div >
