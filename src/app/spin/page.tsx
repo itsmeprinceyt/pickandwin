@@ -273,6 +273,13 @@ const SpinWheel: React.FC = () => {
         }
     };
 
+    const resetDefaultColor = () => {
+        setHighlightColor1("#ff0000");
+        setHighlightColor2("#134dfb");
+        setHighlightColor3("#13a300");
+        setArrow("#000000");
+        setParticipantsColor("#FFFFFF");
+    }
     return (
         <div>
             <div className="bg-gradient-to-b from-purple-500 to-purple-900 w-screen h-screen flex flex-col justify-center items-center relative">
@@ -323,7 +330,17 @@ const SpinWheel: React.FC = () => {
                             </div>
 
 
-                            <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-4">
+                            <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-4 relative">
+                                <button className="absolute right-2 top-2 scale-50 hover:scale-75"
+                                    onClick={resetDefaultColor}>
+                                    <Image
+                                        className="invert"
+                                        src="/reload.png"
+                                        height={25}
+                                        width={25}
+                                        alt="Reload"
+                                    />
+                                </button>
                                 {/* Slice Colors */}
                                 <div className="text-4xl font-bold">Slice Colors</div>
                                 <div className="flex gap-4">
