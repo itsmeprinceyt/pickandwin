@@ -4,12 +4,12 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, useRef, useCallback, Suspense } from "react";
 import HomeButton from "@/(components)/Home";
 import Image from "next/image";
+import confetti from "canvas-confetti";
 
 const SpinWheel: React.FC = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const namesParam = searchParams.get("names");
-
     const [names, setNames] = useState<string[]>([]);
     const [currentName, setCurrentName] = useState<string | null>(null);
     const [currentIndex, setCurrentIndex] = useState<number>();
@@ -312,6 +312,7 @@ const SpinWheel: React.FC = () => {
     };
 
     const handleSpinEnd = (selectedIndex: number) => {
+        launchConfetti();
         setCurrentIndex(selectedIndex);
         setIsChoosing(false);
 
@@ -327,6 +328,13 @@ const SpinWheel: React.FC = () => {
         setArrow("#000000");
         setParticipantsColor("#FFFFFF");
     }
+    const launchConfetti = () => {
+        confetti({
+            particleCount: 300,
+            spread: 200,
+            origin: { y: 0.65 },
+        });
+    };
     return (
         <div>
             <div className="bg-gradient-to-b from-purple-500 to-purple-900 w-screen h-screen flex flex-col justify-center items-center relative">
@@ -442,7 +450,7 @@ const SpinWheel: React.FC = () => {
                             {/* Auto - Remove & Toggle Sound */}
                             <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-5">
                                 <button
-                                    className={`px-4 py-2 rounded-lg font-semibold shadow-lg ${autoRemove
+                                    className={`w-[180px] py-2 rounded-lg font-semibold shadow-lg ${autoRemove
                                         ? "bg-lime-500 shadow-lime-500/30"
                                         : "bg-gray-500 shadow-gray-900/30"
                                         }`}
@@ -451,7 +459,7 @@ const SpinWheel: React.FC = () => {
                                     {autoRemoveText}
                                 </button>
                                 <button
-                                    className={`px-4 py-2 rounded-lg font-semibold shadow-lg ${isSoundOn
+                                    className={`w-[180px] py-2 rounded-lg font-semibold shadow-lg ${isSoundOn
                                         ? "bg-lime-500 shadow-lime-500/30"
                                         : "bg-gray-500 shadow-gray-900/30"
                                         }`}
@@ -503,29 +511,33 @@ const SpinWheel: React.FC = () => {
                 )}
                 {/* Main Container */}
                 <div className="flex flex-col items-center gap-2">
+
+                    {/* Top Name Counter */}
                     <div className="text-4xl font-semibold bg-black/30 p-2 px-6 rounded-lg text-center flex justify-center items-center" style={{ color: participantsColor }}>
-                        {names[currentIndexRef.current] || ""}
+                        {names[currentIndexRef.current] || "Spin it!"}
                     </div>
+
+                    {/* Pop Up Remove */}
                     <div className="z-10">
                         {showPopup && currentIndex !== undefined && (
-                            <div className="fixed inset-0 flex items-center justify-center bg-black/50">
-                                <div className="p-8 rounded-lg shadow-lg text-center relative bg-black/90 border-2 border-black shadow-black/50 flex items-center flex-col gap-4">
-                                    <div className="flex flex-col text-white">
+                            <div className="fixed inset-0 flex items-center justify-center bg-black/70">
+                                <div className="p-8 rounded-lg shadow-lg text-center relative bg-white border-2 border-white/30 flex items-center flex-col gap-4">
+                                    <div className="flex flex-col text-black">
                                         <p className="font-extralight ">
                                             Selected user is:
                                         </p>
-                                        <p className="text-2xl font-semibold">{names[currentIndex]}</p>
+                                        <p className="text-4xl p-4 px-20 font-semibold">{names[currentIndex]}</p>
                                     </div>
 
                                     <div className="flex gap-4">
                                         <button
-                                            className="bg-white shadow-lg shadow-white/30 px-4 py-2 rounded-md hover:scale-105"
+                                            className="bg-purple-600 shadow-lg shadow-purple-600/60 text-white px-4 py-2 rounded-md hover:scale-105"
                                             onClick={() => setShowPopup(false)}
                                         >
                                             Close
                                         </button>
                                         <button
-                                            className="bg-red-500 shadow-lg shadow-red-500/30 text-white px-4 py-2 rounded-md hover:scale-105"
+                                            className="bg-red-500 shadow-lg shadow-red-500/60 text-white px-4 py-2 rounded-md hover:scale-105"
                                             onClick={() => {
                                                 removeName(currentIndex);
                                                 setShowPopup(false);
@@ -552,6 +564,7 @@ const SpinWheel: React.FC = () => {
                         </div>
                         <canvas ref={canvasRef} className=" border-8 border-white rounded-full shadow-lg shadow-black/30" />
                     </div>
+                    
                 </div>
             </div>
         </div >

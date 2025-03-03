@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import MadeByMe from "@/(components)/MadeByMe"
 import HomeButton from "@/(components)/Home";
+import confetti from "canvas-confetti";
 
 const Shuffle = () => {
   const searchParams = useSearchParams();
@@ -90,7 +91,7 @@ const Shuffle = () => {
           clearInterval(slowInterval);
           const randomIndex = Math.floor(Math.random() * names.length);
           const selectedName = names[randomIndex];
-
+          launchConfetti();
           setChosenName(selectedName);
           setCurrentName(selectedName);
           setIsChoosing(false);
@@ -141,6 +142,14 @@ const Shuffle = () => {
     const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
     return luminance > 186;
   };
+
+      const launchConfetti = () => {
+          confetti({
+              particleCount: 300,
+              spread: 200,
+              origin: { y: 0.65 },
+          });
+      };
 
   return (
     <div className="bg-gradient-to-b from-purple-500 to-purple-900 w-screen h-screen flex flex-col justify-center items-center relative">

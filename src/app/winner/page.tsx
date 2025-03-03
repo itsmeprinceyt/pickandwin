@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, Suspense } from "react";
 import MadeByMe from "@/(components)/MadeByMe"
 import HomeButton from "@/(components)/Home";
+import confetti from "canvas-confetti";
 
 const Winner = () => {
     const searchParams = useSearchParams();
@@ -13,8 +14,23 @@ const Winner = () => {
     useEffect(() => {
         if (!winnerName) {
             router.push("/");
+            return;
         }
+        let confettiTimeout: NodeJS.Timeout;
+        const launchConfetti = () => {
+            confetti({
+                particleCount: 300,
+                spread: 200,
+                origin: { y: 0.65 },
+            });
+            confettiTimeout = setTimeout(launchConfetti, Math.random() * (6000 - 3000) + 3000);
+        };
+        launchConfetti();
+        return () => {
+            clearTimeout(confettiTimeout);
+        };
     }, [winnerName, router]);
+    
 
     return (
         <>
