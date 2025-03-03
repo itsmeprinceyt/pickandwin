@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import MadeByMe from "@/(components)/MadeByMe"
@@ -14,6 +14,8 @@ const Shuffle = () => {
 
   const [names, setNames] = useState<string[]>([]);
   const [currentName, setCurrentName] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isSoundOn, setIsSoundOn] = useState(true);
   const [isChoosing, setIsChoosing] = useState(false);
   const [chosenName, setChosenName] = useState<string | null>(null);
   const [timeoutDuration, setTimeoutDuration] = useState(3);
@@ -42,10 +44,14 @@ const Shuffle = () => {
     }
   }, [mode, chosenName, router]);
 
-
   useEffect(() => {
     setTextColor(isBrightColor(highlightColor) ? "black" : "white");
   }, [highlightColor]);
+
+  useEffect(() => {
+    audioRef.current = new Audio("/sound/tick.mp3");
+    audioRef.current.load();
+  }, []);
 
   const handleStart = () => {
     if (names.length === 0 || isChoosing) return;
@@ -57,6 +63,10 @@ const Shuffle = () => {
 
     const fastInterval = setInterval(() => {
       const randomIndex = Math.floor(Math.random() * names.length);
+      if (isSoundOn && audioRef.current) {
+        const sound = audioRef.current.cloneNode() as HTMLAudioElement;
+        sound.play().catch((err) => console.log("Sound Error:", err));
+    }
       setCurrentName(names[randomIndex]); // Name is selected every interval
 
       timeElapsed += 70; // To keep increasing the timeElapsed until it has reached above fastTime
@@ -69,6 +79,10 @@ const Shuffle = () => {
     const startSlowShuffle = () => {
       const slowInterval = setInterval(() => {
         const randomIndex = Math.floor(Math.random() * names.length); // Name is selected every interval
+        if (isSoundOn && audioRef.current) {
+          const sound = audioRef.current.cloneNode() as HTMLAudioElement;
+          sound.play().catch((err) => console.log("Sound Error:", err));
+      }
         setCurrentName(names[randomIndex]);
 
         timeElapsed += 400; // You can increase this to make the slow shuffle even longer
@@ -106,6 +120,10 @@ const Shuffle = () => {
       setToggle(true);
     }
   }
+
+  const toggleSound = () => {
+    setIsSoundOn((prev) => !prev);
+  };
 
   const handleRemoveName = (index: number): void => { // Removing the name from Participants List
     setNames((prevList) => prevList.filter((_, i) => i !== index));
@@ -184,6 +202,19 @@ const Shuffle = () => {
                 onChange={(e) => setHighlightColor(e.target.value)}
                 className="w-[150px] rounded-md bg-white px-1"
               />
+            </div>
+
+            {/* Toggle Sound */}
+            <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-5">
+              <button
+                className={`px-4 py-2 rounded-lg font-semibold shadow-lg ${isSoundOn
+                  ? "bg-lime-500 shadow-lime-500/30"
+                  : "bg-gray-500 shadow-gray-900/30"
+                  }`}
+                onClick={toggleSound}
+              >
+                {isSoundOn ? "Sound: ON" : "Sound: OFF"}
+              </button>
             </div>
 
             {/* Mode Selector */}

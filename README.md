@@ -1,8 +1,8 @@
 # TO DO
 - improve ui ( make custom arrow , add party tada effect)
-- fix spin timer
 - Improve Slice Colors Menu ( per line  Pointer Color, Participants Color)
 - Template Options
+- add side openable bar to enter new names and then click on update
 
 # Pick And Drop
 

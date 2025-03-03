@@ -16,6 +16,7 @@ const SpinWheel: React.FC = () => {
     const lastIndexRef = useRef<number>(-1);
     const currentIndexRef = useRef<number>(0);
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [isSoundOn, setIsSoundOn] = useState(true);
 
     const [isChoosing, setIsChoosing] = useState<boolean>(false);
     const [angleOffset, setAngleOffset] = useState<number>(0);
@@ -150,6 +151,10 @@ const SpinWheel: React.FC = () => {
         }
     };
 
+    const toggleSound = () => {
+        setIsSoundOn((prev) => !prev);
+    };
+
     const drawWheel = useCallback(() => {
         const canvas = canvasRef.current;
         if (!canvas || !canvasSize) return;
@@ -170,13 +175,16 @@ const SpinWheel: React.FC = () => {
         const angleStep = (2 * Math.PI) / numSlices;
         const colors = [highlightColor1, highlightColor2, highlightColor3];
         let colorIndex = 0;
+        const isOdd = names.length % colors.length !== 0;
         names.forEach((name, i) => {
             const startAngle = angleOffset + i * angleStep;
             const endAngle = angleOffset + (i + 1) * angleStep;
 
-
             ctx.fillStyle = colors[colorIndex];
             colorIndex = (colorIndex + 1) % colors.length;
+            if (isOdd && i === names.length - 2) {
+                colorIndex = (colorIndex + 1) % colors.length;
+            }
 
             ctx.beginPath();
             ctx.moveTo(centerX, centerY);
@@ -192,7 +200,19 @@ const SpinWheel: React.FC = () => {
             ctx.rotate(startAngle + angleStep / 2);
             ctx.textAlign = "right";
             ctx.fillStyle = participantsColor;
-            ctx.font = `bold ${Math.max(12, canvasSize / 35)}px Arial`;
+            let textsize = 30;
+            if (names.length >= 100) {
+                textsize = 45;
+            } else if (names.length >= 50) {
+                textsize = 35;
+            } else if (names.length >= 30) {
+                textsize = 32;
+            } else if (names.length >= 10) {
+                textsize = 25;
+            } else {
+                textsize = 20;
+            }
+            ctx.font = `bold ${Math.max(12, canvasSize / textsize)}px Arial`;
             ctx.fillText(name, radius - 10, 5);
             ctx.restore();
         });
@@ -228,14 +248,23 @@ const SpinWheel: React.FC = () => {
         let angVel = Math.random() * 0.3 + 0.3;
         let ang = angleOffset;
         const spinTime = timeoutDuration * 1000;
-        const friction = Math.pow(0.99, 3 / timeoutDuration);
         const start = performance.now();
         const animateSpin = (time: number) => {
             const elapsed = time - start;
+            if (elapsed >= spinTime) {
+                angVel = 0;
+                ang %= 2 * Math.PI;
+                setAngleOffset(ang);
+                const arrowAngle = (0 - ang + 2 * Math.PI) % (2 * Math.PI);
+                const selectedIndex = Math.floor(arrowAngle / sliceAngle) % names.length;
+                setCurrentName(names[selectedIndex]);
+                setCurrentIndex(selectedIndex);
+                setIsChoosing(false);
+                handleSpinEnd(selectedIndex);
+                return;
+            }
             const progress = elapsed / spinTime;
-            angVel *= friction - progress * 0.01;
-            angVel *= friction;
-            if (angVel < 0.002) angVel = 0;
+            angVel = (1 - progress) * (Math.random() * 0.3 + 0.3);
             ang += angVel;
             ang %= 2 * Math.PI;
             setAngleOffset(ang);
@@ -244,7 +273,7 @@ const SpinWheel: React.FC = () => {
             const newIndex = Math.floor(arrowAngle / sliceAngle) % names.length;
 
             if (newIndex !== lastIndexRef.current) {
-                if (audioRef.current) {
+                if (isSoundOn && audioRef.current) {
                     const sound = audioRef.current.cloneNode() as HTMLAudioElement;
                     sound.play().catch((err) => console.log("Sound Error:", err));
                 }
@@ -410,8 +439,8 @@ const SpinWheel: React.FC = () => {
                                 </div>
                             </div>
 
-                            {/* Auto - Remove */}
-                            <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center ">
+                            {/* Auto - Remove & Toggle Sound */}
+                            <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-5">
                                 <button
                                     className={`px-4 py-2 rounded-lg font-semibold shadow-lg ${autoRemove
                                         ? "bg-lime-500 shadow-lime-500/30"
@@ -420,6 +449,15 @@ const SpinWheel: React.FC = () => {
                                     onClick={toggleAutoRemove}
                                 >
                                     {autoRemoveText}
+                                </button>
+                                <button
+                                    className={`px-4 py-2 rounded-lg font-semibold shadow-lg ${isSoundOn
+                                        ? "bg-lime-500 shadow-lime-500/30"
+                                        : "bg-gray-500 shadow-gray-900/30"
+                                        }`}
+                                    onClick={toggleSound}
+                                >
+                                    {isSoundOn ? "Sound: ON" : "Sound: OFF"}
                                 </button>
                             </div>
 
