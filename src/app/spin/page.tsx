@@ -34,23 +34,23 @@ const SpinWheel: React.FC = () => {
     const [highlightColor1, setHighlightColor1] = useState<string>(() => localStorage.getItem("highlightColor1") || "#ff0000");
     const [highlightColor2, setHighlightColor2] = useState<string>(() => localStorage.getItem("highlightColor2") || "#134dfb");
     const [highlightColor3, setHighlightColor3] = useState<string>(() => localStorage.getItem("highlightColor3") || "#13a300");
-    const [arrow, setArrow] = useState<string>(() => localStorage.getItem("arrow") || "#000000");
+    //const [arrow, setArrow] = useState<string>(() => localStorage.getItem("arrow") || "#000000");
     const [participantsColor, setParticipantsColor] = useState<string>(() => localStorage.getItem("participantsColor") || "#FFFFFF");
 
     useEffect(() => {
         localStorage.setItem("highlightColor1", highlightColor1);
         localStorage.setItem("highlightColor2", highlightColor2);
         localStorage.setItem("highlightColor3", highlightColor3);
-        localStorage.setItem("arrow", arrow);
+        //localStorage.setItem("arrow", arrow);
         localStorage.setItem("participantsColor", participantsColor);
-    }, [highlightColor1, highlightColor2, highlightColor3, arrow, participantsColor]);
+    }, [highlightColor1, highlightColor2, highlightColor3, participantsColor]);
 
     useEffect(() => {
         if (typeof window !== "undefined") {
             setHighlightColor1(localStorage.getItem("highlightColor1") || "#ff0000");
             setHighlightColor2(localStorage.getItem("highlightColor2") || "#134dfb");
             setHighlightColor3(localStorage.getItem("highlightColor3") || "#13a300");
-            setArrow(localStorage.getItem("arrow") || "#000000");
+            //setArrow(localStorage.getItem("arrow") || "#000000");
             setParticipantsColor(localStorage.getItem("participantsColor") || "#FFFFFF");
         }
     }, []);
@@ -230,10 +230,12 @@ const SpinWheel: React.FC = () => {
             ctx.restore();
         });
 
-        drawArrow(ctx, centerX, centerY, radius, arrow);
-    }, [names, angleOffset, canvasSize, highlightColor1, highlightColor2, highlightColor3, arrow, participantsColor]);
+        //drawArrow(ctx, centerX, centerY, radius, arrow);
 
-    const drawArrow = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, radius: number, arrowColor: string) => {
+        // add 'arrow' in below array
+    }, [names, angleOffset, canvasSize, highlightColor1, highlightColor2, highlightColor3, participantsColor]);
+
+    /*const drawArrow = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, radius: number, arrowColor: string) => {
         const arrowOffset = 10;
         const arrowX = centerX + radius - arrowOffset;
         const arrowY = centerY;
@@ -247,7 +249,7 @@ const SpinWheel: React.FC = () => {
         ctx.lineTo(arrowX + 20, arrowY + 10);
         ctx.closePath();
         ctx.fill();
-    };
+    };*/
 
     useEffect(() => {
         drawWheel();
@@ -340,7 +342,7 @@ const SpinWheel: React.FC = () => {
         setHighlightColor1("#ff0000");
         setHighlightColor2("#134dfb");
         setHighlightColor3("#13a300");
-        setArrow("#000000");
+        //setArrow("#000000");
         setParticipantsColor("#FFFFFF");
     }
     const launchConfetti = () => {
@@ -432,8 +434,8 @@ const SpinWheel: React.FC = () => {
                                 </div>
 
                                 <div className="flex justify-center items-center text-2xl">
-                                    <div className="flex flex-col justify-center items-center text-center">
-                                        {/* Pointer color */}
+                                    {/* Arrow Color */}
+                                    {/*<div className="flex flex-col justify-center items-center text-center">
                                         <div className="text-xl font-bold mt-4">Pointer Color</div>
                                         <label className="relative cursor-pointer">
                                             <input
@@ -444,7 +446,7 @@ const SpinWheel: React.FC = () => {
                                             />
                                             <div className="w-10 h-10 rounded-md border border-white" style={{ backgroundColor: arrow }}></div>
                                         </label>
-                                    </div>
+                                    </div>*/}
 
                                     <div className="flex flex-col justify-center items-center text-center">
                                         {/* Participants Color */}
@@ -567,7 +569,7 @@ const SpinWheel: React.FC = () => {
                     {/* Wheel */}
                     <div className="relative">
 
-                        {/* Center Image */}
+                        {/* Center Spin Button */}
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                             <button
                                 className="bg-white text-black hover:shadow-lg hover:shadow-white/30 hover:scale-105 ease-linear duration-75 w-[90px] h-[90px]  font-semibold rounded-full  shadow-lg shadow-black/10"
@@ -577,6 +579,17 @@ const SpinWheel: React.FC = () => {
                                 {isChoosing ? "Spinning" : "Spin"}
                             </button>
                         </div>
+
+                        <div className="absolute top-1/2 right-0 translate-y-[-50%] translate-x-[50%] pointer-events-none">
+    <Image
+        src="/vortex-final.png"
+        height={100}
+        width={100}
+        alt="Vortex"
+    />
+</div>
+
+
                         <canvas ref={canvasRef} className=" border-8 border-white rounded-full shadow-lg shadow-black/30" />
                     </div>
 
