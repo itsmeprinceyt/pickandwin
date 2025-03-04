@@ -649,7 +649,7 @@ const SpinWheel: React.FC = () => {
                                 onClick={shuffleWheel}
                                 disabled={isChoosing}
                             >
-                                {isChoosing ? "Spinning" : "Spin"}
+                                {isChoosing ? emoji : "Spin"}
                             </button>
                         </div>
 
