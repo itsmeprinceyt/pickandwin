@@ -125,9 +125,9 @@ const SpinWheel: React.FC = () => {
             const screenSize = window.innerWidth;
             let newSize;
             if (screenSize < 600) {
-                newSize = 250;
+                newSize = 350;
             } else if (screenSize < 800) {
-                newSize = 400;
+                newSize = 500;
             } else {
                 newSize = Math.min(750, screenSize * 0.8);
             }
@@ -439,7 +439,7 @@ const SpinWheel: React.FC = () => {
                                 className="absolute top-3 right-3 hover:scale-125 transition-all ease-in-out">
                                 <Image src="/cross.png" width={10} height={20} alt="Close" />
                             </button>
-                            
+
                             <div className="overflow-y-auto scrollbar-thin scrollbar- scrollbar-track-violet-500 scrollbar-thumb-white p-2 max-h-[80vh] w-full flex flex-col gap-5">
                                 {/* Spin duration */}
                                 <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-2">
