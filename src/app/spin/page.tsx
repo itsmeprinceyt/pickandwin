@@ -389,6 +389,11 @@ const SpinWheel: React.FC = () => {
         setHighlightColor3(colorPalettes[paletteNumber][2]);
     };
 
+    const handleEmojiChange = () => {
+        const randomIndex = Math.floor(Math.random() * emojis.length);
+        setEmoji(emojis[randomIndex]);
+    }
+
     const launchConfetti = () => {
         confetti({
             particleCount: 300,
@@ -644,8 +649,8 @@ const SpinWheel: React.FC = () => {
                             </button>
                         </div>
 
-                        {/* Arrow */}
-                        <div className="z-10 absolute top-1/2 -right-7 translate-y-[-50%] translate-x-[50%] pointer-events-none">{emoji}</div>
+                        {/* Arrow & EMOJI */}
+                        <button className="z-10 absolute top-1/2 -right-7 translate-y-[-50%] translate-x-[50%]" onClick={handleEmojiChange}>{emoji}</button>
                         <div
                             className={`absolute top-1/2 right-0 translate-y-[-50%] translate-x-[50%] pointer-events-none transition-transform duration-150 origin-right ${isArrowDown ? "-rotate-6" : "rotate-0"
                                 }`}
