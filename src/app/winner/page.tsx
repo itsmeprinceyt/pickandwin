@@ -23,7 +23,7 @@ const Winner = () => {
                 spread: 200,
                 origin: { y: 0.65 },
             });
-            confettiTimeout = setTimeout(launchConfetti, Math.random() * (6000 - 3000) + 3000);
+            confettiTimeout = setTimeout(launchConfetti, Math.random() * (4000 - 2000) + 2000);
         };
         launchConfetti();
         return () => {

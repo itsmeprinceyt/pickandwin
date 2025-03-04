@@ -52,6 +52,13 @@ const SpinWheel: React.FC = () => {
     const [highlightColor3, setHighlightColor3] = useState<string>(() => localStorage.getItem("highlightColor3") || "#13a300");
     //const [arrow, setArrow] = useState<string>(() => localStorage.getItem("arrow") || "#000000");
     const [participantsColor, setParticipantsColor] = useState<string>(() => localStorage.getItem("participantsColor") || "#FFFFFF");
+    const [selectedPalette, setSelectedPalette] = useState<number | null>(null);
+
+    const colorPalettes: Record<number, string[]> = {
+        1: ["#FF5733", "#FF8D1A", "#FFC300"], // Shades of red/orange/yellow
+        2: ["#3498DB", "#2980B9", "#1B4F72"], // Shades of blue
+        3: ["#E100FF", "#6A00A3", "#FEB3FF"]  // Shades of green
+    };
 
     useEffect(() => {
         localStorage.setItem("highlightColor1", highlightColor1);
@@ -372,7 +379,16 @@ const SpinWheel: React.FC = () => {
         setHighlightColor3("#13a300");
         //setArrow("#000000");
         setParticipantsColor("#FFFFFF");
+        setSelectedPalette(null);
     }
+
+    const handleColorPallete = (paletteNumber: number) => {
+        setSelectedPalette(paletteNumber);
+        setHighlightColor1(colorPalettes[paletteNumber][0]);
+        setHighlightColor2(colorPalettes[paletteNumber][1]);
+        setHighlightColor3(colorPalettes[paletteNumber][2]);
+    };
+
     const launchConfetti = () => {
         confetti({
             particleCount: 300,
@@ -450,6 +466,7 @@ const SpinWheel: React.FC = () => {
                                                 type="color"
                                                 value={color}
                                                 onChange={(e) => {
+                                                    setSelectedPalette(null);
                                                     if (index === 0) setHighlightColor1(e.target.value);
                                                     if (index === 1) setHighlightColor2(e.target.value);
                                                     if (index === 2) setHighlightColor3(e.target.value);
@@ -476,18 +493,37 @@ const SpinWheel: React.FC = () => {
                                         </label>
                                     </div>*/}
 
-                                    <div className="flex flex-col justify-center items-center text-center">
+                                    <div className="flex flex-col justify-center items-center gap-5 text-center">
                                         {/* Participants Color */}
-                                        <div className="text-xl font-bold mt-4">Participants Color</div>
-                                        <label className="relative cursor-pointer">
-                                            <input
-                                                type="color"
-                                                value={participantsColor}
-                                                onChange={(e) => setParticipantsColor(e.target.value)}
-                                                className="absolute inset-0 opacity-0 cursor-pointer"
-                                            />
-                                            <div className="w-10 h-10 rounded-md border border-white" style={{ backgroundColor: participantsColor }}></div>
-                                        </label>
+                                        <div className="flex items-center justify-center gap-5">
+                                            <div className="text-sm font-bold ">Participants Color</div>
+                                            <label className="relative cursor-pointer">
+                                                <input
+                                                    type="color"
+                                                    value={participantsColor}
+                                                    onChange={(e) => setParticipantsColor(e.target.value)}
+                                                    className="absolute inset-0 opacity-0 cursor-pointer"
+                                                />
+                                                <div className="w-10 h-10 rounded-md border border-white" style={{ backgroundColor: participantsColor }}></div>
+                                            </label>
+                                        </div>
+
+                                        <div className="flex gap-5">
+                                            {[1, 2, 3].map((num) => (
+                                                <button
+                                                    key={num}
+                                                    className={`w-[50px] py-2 rounded-lg font-semibold shadow-lg transition-all duration-200`}
+                                                    style={{
+                                                        backgroundColor: selectedPalette === num ? colorPalettes[num][0] : "#808080",
+                                                        boxShadow: selectedPalette === num ? `0px 4px 10px ${colorPalettes[num][1]}` : "0px 4px 10px rgba(0, 0, 0, 0.3)"
+                                                    }}
+                                                    onClick={() => handleColorPallete(num)}
+                                                >
+                                                    {num}
+                                                </button>
+                                            ))}
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -609,7 +645,7 @@ const SpinWheel: React.FC = () => {
                         </div>
 
                         {/* Arrow */}
-                        <div className="z-20 absolute top-1/2 -right-7 translate-y-[-50%] translate-x-[50%] pointer-events-none">{emoji}</div>
+                        <div className="z-10 absolute top-1/2 -right-7 translate-y-[-50%] translate-x-[50%] pointer-events-none">{emoji}</div>
                         <div
                             className={`absolute top-1/2 right-0 translate-y-[-50%] translate-x-[50%] pointer-events-none transition-transform duration-150 origin-right ${isArrowDown ? "-rotate-6" : "rotate-0"
                                 }`}
