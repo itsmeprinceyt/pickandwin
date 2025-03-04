@@ -1,7 +1,4 @@
 # TO DO
-- improve ui ( make custom arrow )
-- Improve Slice Colors Menu ( per line  Pointer Color, Participants Color)
-- Template Options
 - add side openable bar to enter new names and then click on update
 
 # Pick And Drop

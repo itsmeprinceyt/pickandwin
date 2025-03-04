@@ -327,7 +327,7 @@ const SpinWheel: React.FC = () => {
                     setIsArrowDown(true);
                     setTimeout(() => {
                         setIsArrowDown(false);
-                    }, 50);
+                    }, 80);
                 }
             }
 
