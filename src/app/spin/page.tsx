@@ -45,6 +45,10 @@ const SpinWheel: React.FC = () => {
     const idleSpeed = 0.002;
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [mode, setMode] = useState("lastOneStanding");
+    const [visualMode, setVisualMode] = useState<"text" | "emoji" | "special">("emoji");
+    const specialDefaultImage = "/oie.png";
+    const specialSpinImage = "/oie_loop_cropped.gif";
+
     const [autoRemove, setAutoRemove] = useState(false);
     const [autoRemoveText, setAutoRemoveText] = useState("Auto-Remove: OFF");
     const [timeoutDuration, setTimeoutDuration] = useState(3);
@@ -307,7 +311,7 @@ const SpinWheel: React.FC = () => {
             const randomBoost = (1 - progress) * 0.2;
             angVel = (speedFactor * 0.8) + (progress < 0.4 ? randomBoost : 0);
             angVel = Math.max(angVel, 0);
-            
+
             ang += angVel;
             ang %= 2 * Math.PI;
             setAngleOffset(ang);
@@ -416,6 +420,10 @@ const SpinWheel: React.FC = () => {
             spread: 200,
             origin: { y: 0.65 },
         });
+        if (visualMode === "special") {
+            const audio = new Audio("/sound/oie.mp3");
+            audio.play();
+        }
     };
     return (
         <div>
@@ -565,7 +573,7 @@ const SpinWheel: React.FC = () => {
                                 {/* Auto - Remove & Toggle Sound */}
                                 <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-5">
                                     <button
-                                        className={`w-[180px] py-2 rounded-lg font-semibold shadow-lg ${autoRemove
+                                        className={`w-[230px] py-2 rounded-lg font-semibold shadow-lg ${autoRemove
                                             ? "bg-lime-500 shadow-lime-500/30"
                                             : "bg-gray-500 shadow-gray-900/30"
                                             }`}
@@ -574,7 +582,7 @@ const SpinWheel: React.FC = () => {
                                         {autoRemoveText}
                                     </button>
                                     <button
-                                        className={`w-[180px] py-2 rounded-lg font-semibold shadow-lg ${isSoundOn
+                                        className={`w-[230px] py-2 rounded-lg font-semibold shadow-lg ${isSoundOn
                                             ? "bg-lime-500 shadow-lime-500/30"
                                             : "bg-gray-500 shadow-gray-900/30"
                                             }`}
@@ -582,6 +590,58 @@ const SpinWheel: React.FC = () => {
                                     >
                                         {isSoundOn ? "Sound: ON" : "Sound: OFF"}
                                     </button>
+                                </div>
+
+                                {/* Spin Visual */}
+                                <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-2">
+                                    <div className="text-4xl font-bold">Spin Visual</div>
+                                    <div className="flex flex-col items-start gap-1" id="mode-selector">
+                                        <label
+                                            className={`flex items-center space-x-4 text-white ${visualMode === "text" ? "animate-pulse" : ""}`}
+                                            id="text-label"
+                                        >
+                                            <input
+                                                type="radio"
+                                                name="visualMode"
+                                                value="text"
+                                                id="text-radio"
+                                                checked={visualMode === "text"}
+                                                onChange={() => setVisualMode("text")}
+                                                className="form-radio text-purple-500"
+                                            />
+                                            <span>Text</span>
+                                        </label>
+                                        <label
+                                            className={`flex items-center space-x-4 text-white ${visualMode === "emoji" ? "animate-pulse" : ""}`}
+                                            id="emoji-label"
+                                        >
+                                            <input
+                                                type="radio"
+                                                name="visualMode"
+                                                value="emoji"
+                                                id="emoji-radio"
+                                                checked={visualMode === "emoji"}
+                                                onChange={() => setVisualMode("emoji")}
+                                                className="form-radio text-purple-500"
+                                            />
+                                            <span>Emoji</span>
+                                        </label>
+                                        <label
+                                            className={`flex items-center space-x-4 text-white ${visualMode === "special" ? "animate-pulse" : ""}`}
+                                            id="special-label"
+                                        >
+                                            <input
+                                                type="radio"
+                                                name="visualMode"
+                                                value="special"
+                                                id="special-radio"
+                                                checked={visualMode === "special"}
+                                                onChange={() => setVisualMode("special")}
+                                                className="form-radio text-purple-500"
+                                            />
+                                            <span>Special</span>
+                                        </label>
+                                    </div>
                                 </div>
 
                                 {/* Mode Selector */}
@@ -677,11 +737,21 @@ const SpinWheel: React.FC = () => {
                                 {/* Center Spin Button */}
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                                     <button
-                                        className="bg-white text-black hover:shadow-lg hover:shadow-white/30 hover:scale-105 ease-linear duration-75 w-[90px] h-[90px]  font-semibold rounded-full  shadow-lg shadow-black/10"
+                                        className="bg-white text-black hover:shadow-lg hover:shadow-white/30 hover:scale-105 ease-linear duration-75 w-[90px] h-[90px] font-semibold rounded-full shadow-lg shadow-black/10"
                                         onClick={shuffleWheel}
                                         disabled={isChoosing}
                                     >
-                                        {isChoosing ? emoji : "Spin"}
+                                        {visualMode === "text" && (isChoosing ? "Spinning..." : "Spin")}
+                                        {visualMode === "emoji" && (isChoosing ? emoji : "Spin")}
+                                        {visualMode === "special" && (
+                                            <Image
+                                                src={isChoosing ? specialSpinImage : specialDefaultImage}
+                                                width={200}
+                                                height={200}
+                                                alt="Spin"
+                                                className="w-full h-full object-contain scale-75"
+                                            />
+                                        )}
                                     </button>
                                 </div>
 

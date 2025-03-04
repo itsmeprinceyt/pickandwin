@@ -15,7 +15,10 @@
 }
 
 #last-one-standing-radio,
-#random-winner-radio {
+#random-winner-radio,
+#text-radio,
+#emoji-radio,
+#special-radio {
   appearance: none; 
   width: 20px; 
   height: 20px; 
@@ -28,13 +31,19 @@
 }
 
 #last-one-standing-radio:checked,
-#random-winner-radio:checked {
+#random-winner-radio:checked,
+#text-radio:checked,
+#emoji-radio:checked,
+#special-radio:checked {
   background-color: #7e22ce; 
   border-color: #f2e3ff; 
 }
 
 #last-one-standing-radio:checked::after,
-#random-winner-radio:checked::after {
+#random-winner-radio:checked::after,
+#text-radio:checked::after,
+#emoji-radio:checked::after,
+#special-radio:checked::after {
   content: '';
   width: 10px;
   height: 10px;
