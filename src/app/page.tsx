@@ -152,6 +152,9 @@ export default function Home() {
           <div className="mb-4 flex justify-between items-center">
             <textarea
               className="rounded-xl p-2 w-full h-80 max-h-44 md:max-h-80 focus:outline-none scrollbar-thin scrollbar- scrollbar-track-violet-500 scrollbar-thumb-white"
+              style={{
+                resize: "none",
+              }}
               value={inputValue}
               onChange={handleChange}
               onKeyDown={handleKeyPress}

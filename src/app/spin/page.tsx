@@ -11,6 +11,7 @@ const SpinWheel: React.FC = () => {
     const router = useRouter();
     const namesParam = searchParams.get("names");
     const [names, setNames] = useState<string[]>([]);
+    const [inputValue, setInputValue] = useState(names.join("\n"));
     const [currentName, setCurrentName] = useState<string | null>(null);
     const [currentIndex, setCurrentIndex] = useState<number>();
     const lastIndexRef = useRef<number>(-1);
@@ -48,6 +49,7 @@ const SpinWheel: React.FC = () => {
     const [autoRemoveText, setAutoRemoveText] = useState("Auto-Remove: OFF");
     const [timeoutDuration, setTimeoutDuration] = useState(3);
     const [toggle, setToggle] = useState(false);
+    const [panelToggle, setPanelToggle] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const [canvasSize, setCanvasSize] = useState(0);
 
@@ -81,14 +83,6 @@ const SpinWheel: React.FC = () => {
             setParticipantsColor(localStorage.getItem("participantsColor") || "#FFFFFF");
         }
     }, []);
-
-    useEffect(() => {
-        if (namesParam) { // If state will run only if there are names
-            setNames(decodeURIComponent(namesParam).split(","));
-        } else { // Otherwise it will redirect to home page if there are no names
-            router.push("/");
-        }
-    }, [namesParam, router]);
 
     useEffect(() => {
         if (names.length === 1) {
@@ -161,15 +155,6 @@ const SpinWheel: React.FC = () => {
         audioRef.current = new Audio("/sound/tick.mp3");
         audioRef.current.load();
     }, []);
-
-
-    const handleSettings = () => {
-        if (toggle) {
-            setToggle(false);
-        } else {
-            setToggle(true);
-        }
-    }
 
     const handleModeChange = (selectedMode: string) => {
         if (selectedMode === "randomWinner") {
@@ -318,7 +303,12 @@ const SpinWheel: React.FC = () => {
                 return;
             }
             const progress = elapsed / spinTime;
-            angVel = (1 - progress) * (Math.random() * 0.3 + 0.3);
+            if (progress < 0.5) {
+                angVel = (1 - progress) * (Math.random() * 0.5 + 0.5);
+            } else {
+                const slowProgress = (progress - 0.5) / 0.5;
+                angVel = (1 - slowProgress) * 0.2;
+            }
             ang += angVel;
             ang %= 2 * Math.PI;
             setAngleOffset(ang);
@@ -402,6 +392,24 @@ const SpinWheel: React.FC = () => {
         const randomIndex = Math.floor(Math.random() * emojis.length);
         setEmoji(emojis[randomIndex]);
     }
+    const handlePanelOpen = () => {
+        setPanelToggle((prev) => !prev);
+    
+        if (!panelToggle) {
+            setInputValue(names.join("\n"));
+        }
+    };
+    const handleUpdateName = (): void => {
+        const newNames = inputValue
+            .split(/[\n,]/)
+            .map((name) => name.trim())
+            .filter((name) => name !== "");
+
+        const uniqueNames = Array.from(new Set(newNames));
+        setNames(uniqueNames);
+        setInputValue(uniqueNames.join("\n"));
+        setPanelToggle(false);
+    };
 
     const launchConfetti = () => {
         confetti({
@@ -419,9 +427,22 @@ const SpinWheel: React.FC = () => {
                 <div className="absolute top-5 transform right-5 text-white">
                     <button
                         className="bg-purple-800 rounded-full p-2"
-                        onClick={handleSettings}>
+                        onClick={() => setToggle(prev => !prev)}>
                         <Image
                             src="/settings.png"
+                            height={25}
+                            width={25}
+                            alt="cross"
+                        />
+                    </button>
+                </div>
+                <div className="absolute top-20 transform right-5 text-white">
+                    <button
+                        className="bg-purple-800 rounded-full p-2"
+                        onClick={handlePanelOpen}>
+                        <Image
+                            className="invert"
+                            src="/panel.png"
                             height={25}
                             width={25}
                             alt="cross"
@@ -435,7 +456,7 @@ const SpinWheel: React.FC = () => {
                         <div className="relative bg-purple-600 border-2 border-white/30 text-white flex flex-col justify-center gap-5 items-center p-5 py-10 md:p-8 rounded-xl shadow-xl shadow-white/20 max-w-[90vw] max-h-[90vh] overflow-y-auto">
                             {/* To Close Pop up Setting*/}
                             <button
-                                onClick={handleSettings}
+                                onClick={() => setToggle(prev => !prev)}
                                 className="absolute top-3 right-3 hover:scale-125 transition-all ease-in-out">
                                 <Image src="/cross.png" width={10} height={20} alt="Close" />
                             </button>
@@ -605,13 +626,9 @@ const SpinWheel: React.FC = () => {
                         </div>
                     </div>
                 )}
-                {/* Main Container */}
-                <div className="flex flex-col items-center gap-2">
 
-                    {/* Top Name Counter */}
-                    <div className="text-4xl font-semibold bg-black/30 p-2 px-6 rounded-lg text-center flex justify-center items-center" style={{ color: participantsColor }}>
-                        {names[currentIndexRef.current] || "Spin it!"}
-                    </div>
+                {/* Main Container */}
+                <div className="h-screen flex items-center justify-center gap-2">
 
                     {/* Pop Up Remove */}
                     <div className="z-30">
@@ -627,13 +644,13 @@ const SpinWheel: React.FC = () => {
 
                                     <div className="flex gap-4">
                                         <button
-                                            className="bg-purple-600 shadow-lg shadow-purple-600/60 text-white px-4 py-2 rounded-md hover:scale-105"
+                                            className="bg-purple-600 shadow-lg shadow-purple-600/60 text-white w-[100px] px-4 py-2 rounded-md hover:scale-105"
                                             onClick={() => setShowPopup(false)}
                                         >
                                             Close
                                         </button>
                                         <button
-                                            className="bg-red-500 shadow-lg shadow-red-500/60 text-white px-4 py-2 rounded-md hover:scale-105"
+                                            className="bg-red-500 shadow-lg shadow-red-500/60 text-white w-[100px] px-4 py-2 rounded-md hover:scale-105"
                                             onClick={() => {
                                                 removeName(currentIndex);
                                                 setShowPopup(false);
@@ -645,36 +662,92 @@ const SpinWheel: React.FC = () => {
                         )}
                     </div>
 
-                    {/* Wheel */}
-                    <div className="relative">
+                    <div className=" flex justify-center items-center gap-14 flex-col lg:flex-row">
 
-                        {/* Center Spin Button */}
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                            <button
-                                className="bg-white text-black hover:shadow-lg hover:shadow-white/30 hover:scale-105 ease-linear duration-75 w-[90px] h-[90px]  font-semibold rounded-full  shadow-lg shadow-black/10"
-                                onClick={shuffleWheel}
-                                disabled={isChoosing}
-                            >
-                                {isChoosing ? emoji : "Spin"}
-                            </button>
+                        {/* Wheel Div*/}
+                        <div className="flex flex-col justify-center items-center gap-2">
+
+                            {/* Top Name Counter */}
+                            <div className="text-4xl font-semibold bg-black/30 p-2 px-6 rounded-lg text-center flex justify-center items-center" style={{ color: participantsColor }}>
+                                {names[currentIndexRef.current] || "Spin it!"}
+                            </div>
+
+                            {/* Main WHEEL */}
+                            <div className="relative">
+
+                                {/* Center Spin Button */}
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                                    <button
+                                        className="bg-white text-black hover:shadow-lg hover:shadow-white/30 hover:scale-105 ease-linear duration-75 w-[90px] h-[90px]  font-semibold rounded-full  shadow-lg shadow-black/10"
+                                        onClick={shuffleWheel}
+                                        disabled={isChoosing}
+                                    >
+                                        {isChoosing ? emoji : "Spin"}
+                                    </button>
+                                </div>
+
+                                {/* EMOJI */}
+                                <button className="z-10 absolute top-1/2 -right-7 translate-y-[-50%] translate-x-[50%]" onClick={handleEmojiChange}>{emoji}</button>
+                                {/* Arrow */}
+                                <div
+                                    className={`absolute top-1/2 right-0 translate-y-[-50%] translate-x-[50%] pointer-events-none transition-transform duration-150 origin-right ${isArrowDown ? "-rotate-6" : "rotate-0"
+                                        }`}
+                                >
+                                    <Image
+                                        src="/arrow-final.png"
+                                        height={100}
+                                        width={100}
+                                        alt="Pointer Arrow"
+                                    />
+                                </div>
+                                {/* Wheel Canvas */}
+                                <canvas ref={canvasRef} className=" border-8 border-white rounded-full shadow-lg shadow-black/30" />
+                            </div>
+                        </div>
+                        <div className="z-30">
+
+
+
+                            {/* Input Field */}
+                            {panelToggle && (
+                                <div className="fixed inset-0 flex flex-col items-center justify-center bg-black/70 gap-2">
+                                    <div className="relative bg-white border-2 border-white/30 text-white p-4 flex flex-col justify-center items-center rounded-xl shadow-xl shadow-white/20 gap-4">
+                                        <div className="text-xl font-semibold text-black">Participants List</div>
+                                        {names.length > 0 && (
+                                            <div className="z-10 absolute bottom-20 left-7 animate-bounce bg-purple-500 shadow-lg shadow-purple-800/30 p-1 px-2 rounded-md text-purple-200 text-[12px] w-[281px] text-center pointer-events-none">
+                                                Remove or add names and hit Update !
+                                            </div>
+                                        )}
+                                        <div className="rounded-lg shadow-lg text-center relative bg-white border-2 border-white/30 flex items-center flex-col gap-4">
+                                            <textarea
+                                                className="rounded-xl shadow-lg shadow-black/30 p-2 w-[300px] h-[400px] focus:outline-none scrollbar-thin scrollbar-track-violet-500 scrollbar-thumb-white text-black"
+                                                style={{ resize: "none" }}
+                                                value={inputValue}
+                                                onChange={(e) => setInputValue(e.target.value)} // Update state on edit
+                                                placeholder="Enter names, separated by commas or new lines."
+                                            />
+                                        </div>
+                                        <div className="flex gap-5">
+                                            {/* Close button */}
+                                            <button
+                                                className="bg-purple-600 shadow-lg shadow-purple-600/60 text-white w-[100px] px-4 py-2 rounded-md hover:scale-105"
+                                                onClick={() => setPanelToggle(false)}
+                                            >
+                                                Close
+                                            </button>
+
+                                            {/* Reset button */}
+                                            <button className="bg-red-500 shadow-lg shadow-red-500/60 text-white w-[100px] px-4 py-2 rounded-md hover:scale-105"
+                                                onClick={handleUpdateName}>
+                                                Update
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
-                        {/* Arrow & EMOJI */}
-                        <button className="z-10 absolute top-1/2 -right-7 translate-y-[-50%] translate-x-[50%]" onClick={handleEmojiChange}>{emoji}</button>
-                        <div
-                            className={`absolute top-1/2 right-0 translate-y-[-50%] translate-x-[50%] pointer-events-none transition-transform duration-150 origin-right ${isArrowDown ? "-rotate-6" : "rotate-0"
-                                }`}
-                        >
-                            <Image
-                                src="/arrow-final.png"
-                                height={100}
-                                width={100}
-                                alt="Pointer Arrow"
-                            />
-                        </div>
 
-
-                        <canvas ref={canvasRef} className=" border-8 border-white rounded-full shadow-lg shadow-black/30" />
                     </div>
 
                 </div>
