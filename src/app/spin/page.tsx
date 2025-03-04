@@ -715,7 +715,7 @@ const SpinWheel: React.FC = () => {
                                         <div className="text-xl font-extralight text-black">Participants List</div>
                                         <div className="rounded-lg shadow-lg text-center relative bg-white border-2 border-white/30 flex items-center flex-col gap-4">
                                             <textarea
-                                                className="rounded-l-xl rounded-t-xl rounded-b-xl rounded-r-none border border-purple-600 shadow-lg shadow-purple-600/30 w-[300px] h-[400px] p-2 focus:outline-none scrollbar-thin scrollbar-track-violet-500 scrollbar-thumb-white text-black "
+                                                className="rounded-l-xl rounded-t-xl rounded-b-xl rounded-tr-none rounded-br-none border border-purple-600 shadow-lg shadow-purple-600/30 w-[300px] h-[400px] p-2 focus:outline-none scrollbar-thin scrollbar-track-violet-500 scrollbar-thumb-white text-black "
                                                 style={{ resize: "none" }}
                                                 value={inputValue}
                                                 onChange={(e) => setInputValue(e.target.value)} // Update state on edit
