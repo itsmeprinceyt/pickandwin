@@ -394,7 +394,7 @@ const SpinWheel: React.FC = () => {
     }
     const handlePanelOpen = () => {
         setPanelToggle((prev) => !prev);
-    
+
         if (!panelToggle) {
             setInputValue(names.join("\n"));
         }
@@ -712,15 +712,10 @@ const SpinWheel: React.FC = () => {
                             {panelToggle && (
                                 <div className="fixed inset-0 flex flex-col items-center justify-center bg-black/70 gap-2">
                                     <div className="relative bg-white border-2 border-white/30 text-white p-4 flex flex-col justify-center items-center rounded-xl shadow-xl shadow-white/20 gap-4">
-                                        <div className="text-xl font-semibold text-black">Participants List</div>
-                                        {names.length > 0 && (
-                                            <div className="z-10 absolute bottom-20 left-7 animate-bounce bg-purple-500 shadow-lg shadow-purple-800/30 p-1 px-2 rounded-md text-purple-200 text-[12px] w-[281px] text-center pointer-events-none">
-                                                Remove or add names and hit Update !
-                                            </div>
-                                        )}
+                                        <div className="text-xl font-extralight text-black">Participants List</div>
                                         <div className="rounded-lg shadow-lg text-center relative bg-white border-2 border-white/30 flex items-center flex-col gap-4">
                                             <textarea
-                                                className="rounded-xl shadow-lg shadow-black/30 p-2 w-[300px] h-[400px] focus:outline-none scrollbar-thin scrollbar-track-violet-500 scrollbar-thumb-white text-black"
+                                                className="rounded-l-xl rounded-t-xl rounded-b-xl rounded-r-none border border-purple-600 shadow-lg shadow-purple-600/30 w-[300px] h-[400px] p-2 focus:outline-none scrollbar-thin scrollbar-track-violet-500 scrollbar-thumb-white text-black "
                                                 style={{ resize: "none" }}
                                                 value={inputValue}
                                                 onChange={(e) => setInputValue(e.target.value)} // Update state on edit
