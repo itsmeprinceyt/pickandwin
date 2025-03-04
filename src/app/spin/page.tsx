@@ -303,12 +303,11 @@ const SpinWheel: React.FC = () => {
                 return;
             }
             const progress = elapsed / spinTime;
-            if (progress < 0.5) {
-                angVel = (1 - progress) * (Math.random() * 0.5 + 0.5);
-            } else {
-                const slowProgress = (progress - 0.5) / 0.5;
-                angVel = (1 - slowProgress) * 0.2;
-            }
+            const speedFactor = Math.pow(1 - progress, 4);
+            const randomBoost = (1 - progress) * 0.2;
+            angVel = (speedFactor * 0.8) + (progress < 0.4 ? randomBoost : 0);
+            angVel = Math.max(angVel, 0);
+            
             ang += angVel;
             ang %= 2 * Math.PI;
             setAngleOffset(ang);
