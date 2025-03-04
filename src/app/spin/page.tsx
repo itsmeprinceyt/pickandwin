@@ -119,7 +119,7 @@ const SpinWheel: React.FC = () => {
             const screenSize = window.innerWidth;
             let newSize;
             if (screenSize < 600) {
-                newSize = 350;
+                newSize = 325;
             } else if (screenSize < 800) {
                 newSize = 500;
             } else {
