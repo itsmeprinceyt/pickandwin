@@ -17,6 +17,21 @@ const SpinWheel: React.FC = () => {
     const currentIndexRef = useRef<number>(0);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [isSoundOn, setIsSoundOn] = useState(true);
+    const [emoji, setEmoji] = useState("😪");
+    const emojis = [
+        "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇",
+        "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "😚",
+        "😋", "😛", "😝", "😜", "🤪", "🤨", "🧐", "🤓", "😎", "🥳",
+        "😏", "😒", "😞", "😔", "😟", "😕", "🙁", "☹️", "😣", "😖",
+        "😫", "😩", "🥺", "😢", "😭", "😤", "😠", "😡", "🤬", "🤯",
+        "😳", "🥵", "🥶", "😶", "😐", "😑", "😬", "🙄", "😯", "😦",
+        "😧", "😮", "😲", "🥱", "😴", "🤤", "😪", "😵", "🤐", "🥴",
+        "🤢", "🤮", "🤧", "😷", "🤒", "🤕", "🤑", "🤠", "😈", "👿",
+        "👻", "💀", "☠️", "👽", "👾", "🤖", "💩", "🎃", "😺", "😸",
+        "😹", "😻", "😼", "😽", "🙀", "😿", "😾", "❤", "💙", "💚",
+        "💛", "💜", "🖤", "🤍", "🤎", "💔", "❤️‍🔥", "❤️‍🩹", "💖", "💘",
+        "💝", "💗", "💓", "💞", "💕", "❣️", "💟"
+    ];
 
     const [isChoosing, setIsChoosing] = useState<boolean>(false);
     const [angleOffset, setAngleOffset] = useState<number>(0);
@@ -135,6 +150,7 @@ const SpinWheel: React.FC = () => {
         audioRef.current.load();
     }, []);
 
+
     const handleSettings = () => {
         if (toggle) {
             setToggle(false);
@@ -234,7 +250,10 @@ const SpinWheel: React.FC = () => {
 
         // add 'arrow' in below array
     }, [names, angleOffset, canvasSize, highlightColor1, highlightColor2, highlightColor3, participantsColor]);
-
+    
+    /* =========================================================== */
+    /* THIS WAS THE DEFAULT ARROW, IF YOU CHANGE SOMETHING USE THIS TO DEBUG THE EXACT ARROW LOCATION */
+    /* =========================================================== */
     /*const drawArrow = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, radius: number, arrowColor: string) => {
         const arrowOffset = 10;
         const arrowX = centerX + radius - arrowOffset;
@@ -250,6 +269,7 @@ const SpinWheel: React.FC = () => {
         ctx.closePath();
         ctx.fill();
     };*/
+    /* =========================================================== */
 
     useEffect(() => {
         drawWheel();
@@ -293,6 +313,8 @@ const SpinWheel: React.FC = () => {
                 if (isSoundOn && audioRef.current) {
                     const sound = audioRef.current.cloneNode() as HTMLAudioElement;
                     sound.play().catch((err) => console.log("Sound Error:", err));
+                    const randomIndex = Math.floor(Math.random() * emojis.length);
+                    setEmoji(emojis[randomIndex]);
                 }
             }
 
@@ -535,7 +557,7 @@ const SpinWheel: React.FC = () => {
                     </div>
 
                     {/* Pop Up Remove */}
-                    <div className="z-10">
+                    <div className="z-30">
                         {showPopup && currentIndex !== undefined && (
                             <div className="fixed inset-0 flex items-center justify-center bg-black/70">
                                 <div className="p-8 rounded-lg shadow-lg text-center relative bg-white border-2 border-white/30 flex items-center flex-col gap-4">
@@ -580,15 +602,16 @@ const SpinWheel: React.FC = () => {
                             </button>
                         </div>
 
+                        {/* Arrow */}
+                        <div className="z-20 absolute top-1/2 -right-7 translate-y-[-50%] translate-x-[50%] pointer-events-none">{emoji}</div>
                         <div className="absolute top-1/2 right-0 translate-y-[-50%] translate-x-[50%] pointer-events-none">
-    <Image
-        src="/vortex-final.png"
-        height={100}
-        width={100}
-        alt="Vortex"
-    />
-</div>
-
+                            <Image
+                                src="/arrow-final.png"
+                                height={100}
+                                width={100}
+                                alt="Pointer Arrow"
+                            />
+                        </div>
 
                         <canvas ref={canvasRef} className=" border-8 border-white rounded-full shadow-lg shadow-black/30" />
                     </div>
