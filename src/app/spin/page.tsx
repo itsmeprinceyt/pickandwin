@@ -18,7 +18,7 @@ const SpinWheel: React.FC = () => {
     const currentIndexRef = useRef<number>(0);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [isSoundOn, setIsSoundOn] = useState(true);
-    const [emoji, setEmoji] = useState("😪");
+    const [emoji, setEmoji] = useState("🤡");
     const emojis = [
         "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇",
         "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "😚",
