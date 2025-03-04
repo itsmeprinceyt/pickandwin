@@ -32,16 +32,15 @@ const SpinWheel: React.FC = () => {
         "💛", "💜", "🖤", "🤍", "🤎", "💔", "❤️‍🔥", "❤️‍🩹", "💖", "💘",
         "💝", "💗", "💓", "💞", "💕", "❣️", "💟",
     
-        // Hand gestures
         "👍", "👎", "👌", "✌️", "🤞", "🤟", "🤘", "🤙", "👏", "🙌",
         "👐", "🤲", "🤝", "🙏", "✋", "🤚", "🖐️", "🖖", "👋", "🤜",
-        "🤛", "✊", "👊", "🤏", "🖕" // Middle finger
+        "🤛", "✊", "👊", "🤏", "🖕"
     ];
     const [isArrowDown, setIsArrowDown] = useState(false);
 
     const [isChoosing, setIsChoosing] = useState<boolean>(false);
     const [angleOffset, setAngleOffset] = useState<number>(0);
-    const [isIdle, setIsIdle] = useState(true); // Track idle state
+    const [isIdle, setIsIdle] = useState(true);
     const idleSpeed = 0.002;
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [mode, setMode] = useState("lastOneStanding");
@@ -62,7 +61,7 @@ const SpinWheel: React.FC = () => {
     const colorPalettes: Record<number, string[]> = {
         1: ["#FF5733", "#FF8D1A", "#FFC300"], // Shades of red/orange/yellow
         2: ["#3498DB", "#2980B9", "#1B4F72"], // Shades of blue
-        3: ["#E100FF", "#6A00A3", "#FEB3FF"]  // Shades of green
+        3: ["#E100FF", "#6A00A3", "#FEB3FF"]  // Shades of purple
     };
 
     useEffect(() => {
