@@ -31,7 +31,7 @@ const SpinWheel: React.FC = () => {
         "😹", "😻", "😼", "😽", "🙀", "😿", "😾", "❤", "💙", "💚",
         "💛", "💜", "🖤", "🤍", "🤎", "💔", "❤️‍🔥", "❤️‍🩹", "💖", "💘",
         "💝", "💗", "💓", "💞", "💕", "❣️", "💟",
-    
+
         "👍", "👎", "👌", "✌️", "🤞", "🤟", "🤘", "🤙", "👏", "🙌",
         "👐", "🤲", "🤝", "🙏", "✋", "🤚", "🖐️", "🖖", "👋", "🤜",
         "🤛", "✊", "👊", "🤏", "🖕"
@@ -202,11 +202,16 @@ const SpinWheel: React.FC = () => {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
+        const dpr = window.devicePixelRatio || 1;
         const radius = canvasSize / 2;
         const centerX = canvasSize / 2;
         const centerY = canvasSize / 2;
-        canvas.width = canvasSize;
-        canvas.height = canvasSize;
+
+        canvas.width = canvasSize * dpr;
+        canvas.height = canvasSize * dpr;
+        canvas.style.width = `${canvasSize}px`;
+        canvas.style.height = `${canvasSize}px`;
+        ctx.scale(dpr, dpr);
 
         ctx.clearRect(0, 0, canvasSize, canvasSize);
 
@@ -426,70 +431,70 @@ const SpinWheel: React.FC = () => {
 
                 {/* Settings */}
                 {toggle && (
-                    <div className="absolute z-20 left-0 right-0 bg-black/90 min-h-screen flex justify-center items-center">
-                        <div className="relative bg-purple-600 border-2 border-white/30 text-white flex flex-col justify-center gap-5 items-center p-5 py-10 md:p-8 rounded-xl shadow-xl shadow-white/20">
-
+                    <div className="fixed inset-0 z-50 bg-black/90 flex justify-center items-center">
+                        <div className="relative bg-purple-600 border-2 border-white/30 text-white flex flex-col justify-center gap-5 items-center p-5 py-10 md:p-8 rounded-xl shadow-xl shadow-white/20 max-w-[90vw] max-h-[90vh] overflow-y-auto">
                             {/* To Close Pop up Setting*/}
                             <button
                                 onClick={handleSettings}
                                 className="absolute top-3 right-3 hover:scale-125 transition-all ease-in-out">
                                 <Image src="/cross.png" width={10} height={20} alt="Close" />
                             </button>
-
-                            {/* Spin duration */}
-                            <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-2">
-                                <div className="text-4xl font-bold">Spin Time</div>
-                                <div className="flex flex-col items-center">
-                                    <label htmlFor="timeoutSlider" className="text-white font-bold mb-2"> {timeoutDuration} seconds
-                                    </label>
-                                    <input
-                                        id="timeoutSlider"
-                                        type="range"
-                                        min="1"
-                                        max="60"
-                                        value={timeoutDuration}
-                                        onChange={(e) => setTimeoutDuration(Number(e.target.value))}
-                                        className="w-[150px] h-2 bg-purple-300 rounded-lg appearance-none cursor-pointer active:bg-purple-400"
-                                    />
-                                </div>
-                            </div>
-
-
-                            <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-4 relative">
-                                <button className="absolute right-2 top-2 scale-50 hover:scale-75"
-                                    onClick={resetDefaultColor}>
-                                    <Image
-                                        className="invert"
-                                        src="/reload.png"
-                                        height={25}
-                                        width={25}
-                                        alt="Reload"
-                                    />
-                                </button>
-                                {/* Slice Colors */}
-                                <div className="text-4xl font-bold">Slice Colors</div>
-                                <div className="flex gap-4">
-                                    {[highlightColor1, highlightColor2, highlightColor3].map((color, index) => (
-                                        <label key={index} className="relative cursor-pointer">
-                                            <input
-                                                type="color"
-                                                value={color}
-                                                onChange={(e) => {
-                                                    setSelectedPalette(null);
-                                                    if (index === 0) setHighlightColor1(e.target.value);
-                                                    if (index === 1) setHighlightColor2(e.target.value);
-                                                    if (index === 2) setHighlightColor3(e.target.value);
-                                                }}
-                                                className="absolute inset-0 opacity-0 cursor-pointer"
-                                            />
-                                            <div className="w-10 h-10 rounded-md border border-white" style={{ backgroundColor: color }}></div>
+                            
+                            <div className="overflow-y-auto scrollbar-thin scrollbar- scrollbar-track-violet-500 scrollbar-thumb-white p-2 max-h-[80vh] w-full flex flex-col gap-5">
+                                {/* Spin duration */}
+                                <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-2">
+                                    <div className="text-4xl font-bold">Spin Time</div>
+                                    <div className="flex flex-col items-center">
+                                        <label htmlFor="timeoutSlider" className="text-white font-bold mb-2"> {timeoutDuration} seconds
                                         </label>
-                                    ))}
+                                        <input
+                                            id="timeoutSlider"
+                                            type="range"
+                                            min="1"
+                                            max="60"
+                                            value={timeoutDuration}
+                                            onChange={(e) => setTimeoutDuration(Number(e.target.value))}
+                                            className="w-[150px] h-2 bg-purple-300 rounded-lg appearance-none cursor-pointer active:bg-purple-400"
+                                        />
+                                    </div>
                                 </div>
 
-                                <div className="flex justify-center items-center text-2xl">
-                                    {/* Arrow Color */}
-                                    {/*<div className="flex flex-col justify-center items-center text-center">
+                                {/* Reset to default */}
+                                <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-4 relative">
+                                    <button className="absolute right-2 top-2 scale-50 hover:scale-75"
+                                        onClick={resetDefaultColor}>
+                                        <Image
+                                            className="invert"
+                                            src="/reload.png"
+                                            height={25}
+                                            width={25}
+                                            alt="Reload"
+                                        />
+                                    </button>
+                                    {/* Slice Colors */}
+                                    <div className="text-4xl font-bold">Slice Colors</div>
+                                    <div className="flex gap-4">
+                                        {[highlightColor1, highlightColor2, highlightColor3].map((color, index) => (
+                                            <label key={index} className="relative cursor-pointer">
+                                                <input
+                                                    type="color"
+                                                    value={color}
+                                                    onChange={(e) => {
+                                                        setSelectedPalette(null);
+                                                        if (index === 0) setHighlightColor1(e.target.value);
+                                                        if (index === 1) setHighlightColor2(e.target.value);
+                                                        if (index === 2) setHighlightColor3(e.target.value);
+                                                    }}
+                                                    className="absolute inset-0 opacity-0 cursor-pointer"
+                                                />
+                                                <div className="w-10 h-10 rounded-md border border-white" style={{ backgroundColor: color }}></div>
+                                            </label>
+                                        ))}
+                                    </div>
+
+                                    <div className="flex justify-center items-center text-2xl">
+                                        {/* Arrow Color */}
+                                        {/*<div className="flex flex-col justify-center items-center text-center">
                                         <div className="text-xl font-bold mt-4">Pointer Color</div>
                                         <label className="relative cursor-pointer">
                                             <input
@@ -502,100 +507,101 @@ const SpinWheel: React.FC = () => {
                                         </label>
                                     </div>*/}
 
-                                    <div className="flex flex-col justify-center items-center gap-5 text-center">
-                                        {/* Participants Color */}
-                                        <div className="flex items-center justify-center gap-5">
-                                            <div className="text-sm font-bold ">Participants Color</div>
-                                            <label className="relative cursor-pointer">
-                                                <input
-                                                    type="color"
-                                                    value={participantsColor}
-                                                    onChange={(e) => setParticipantsColor(e.target.value)}
-                                                    className="absolute inset-0 opacity-0 cursor-pointer"
-                                                />
-                                                <div className="w-10 h-10 rounded-md border border-white" style={{ backgroundColor: participantsColor }}></div>
-                                            </label>
-                                        </div>
+                                        <div className="flex flex-col justify-center items-center gap-5 text-center">
+                                            {/* Participants Color */}
+                                            <div className="flex items-center justify-center gap-5">
+                                                <div className="text-sm font-bold ">Participants Color</div>
+                                                <label className="relative cursor-pointer">
+                                                    <input
+                                                        type="color"
+                                                        value={participantsColor}
+                                                        onChange={(e) => setParticipantsColor(e.target.value)}
+                                                        className="absolute inset-0 opacity-0 cursor-pointer"
+                                                    />
+                                                    <div className="w-10 h-10 rounded-md border border-white" style={{ backgroundColor: participantsColor }}></div>
+                                                </label>
+                                            </div>
 
-                                        <div className="flex gap-5">
-                                            {[1, 2, 3].map((num) => (
-                                                <button
-                                                    key={num}
-                                                    className={`w-[50px] py-2 rounded-lg font-semibold shadow-lg transition-all duration-200`}
-                                                    style={{
-                                                        backgroundColor: selectedPalette === num ? colorPalettes[num][0] : "#808080",
-                                                        boxShadow: selectedPalette === num ? `0px 4px 10px ${colorPalettes[num][1]}` : "0px 4px 10px rgba(0, 0, 0, 0.3)"
-                                                    }}
-                                                    onClick={() => handleColorPallete(num)}
-                                                >
-                                                    {num}
-                                                </button>
-                                            ))}
-                                        </div>
+                                            <div className="flex gap-5">
+                                                {[1, 2, 3].map((num) => (
+                                                    <button
+                                                        key={num}
+                                                        className={`w-[50px] py-2 rounded-lg font-semibold shadow-lg transition-all duration-200`}
+                                                        style={{
+                                                            backgroundColor: selectedPalette === num ? colorPalettes[num][0] : "#808080",
+                                                            boxShadow: selectedPalette === num ? `0px 4px 10px ${colorPalettes[num][1]}` : "0px 4px 10px rgba(0, 0, 0, 0.3)"
+                                                        }}
+                                                        onClick={() => handleColorPallete(num)}
+                                                    >
+                                                        {num}
+                                                    </button>
+                                                ))}
+                                            </div>
 
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Auto - Remove & Toggle Sound */}
-                            <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-5">
-                                <button
-                                    className={`w-[180px] py-2 rounded-lg font-semibold shadow-lg ${autoRemove
-                                        ? "bg-lime-500 shadow-lime-500/30"
-                                        : "bg-gray-500 shadow-gray-900/30"
-                                        }`}
-                                    onClick={toggleAutoRemove}
-                                >
-                                    {autoRemoveText}
-                                </button>
-                                <button
-                                    className={`w-[180px] py-2 rounded-lg font-semibold shadow-lg ${isSoundOn
-                                        ? "bg-lime-500 shadow-lime-500/30"
-                                        : "bg-gray-500 shadow-gray-900/30"
-                                        }`}
-                                    onClick={toggleSound}
-                                >
-                                    {isSoundOn ? "Sound: ON" : "Sound: OFF"}
-                                </button>
-                            </div>
-
-                            {/* Mode Selector */}
-                            <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-2">
-                                <div className="text-4xl font-bold">Choose Mode</div>
-                                <div className="flex flex-col items-start gap-1" id="mode-selector">
-                                    <label
-                                        className={`flex items-center space-x-4 text-white ${mode === "lastOneStanding" ? "animate-pulse" : ""}`}
-                                        id="last-one-standing-label"
+                                {/* Auto - Remove & Toggle Sound */}
+                                <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-5">
+                                    <button
+                                        className={`w-[180px] py-2 rounded-lg font-semibold shadow-lg ${autoRemove
+                                            ? "bg-lime-500 shadow-lime-500/30"
+                                            : "bg-gray-500 shadow-gray-900/30"
+                                            }`}
+                                        onClick={toggleAutoRemove}
                                     >
-                                        <input
-                                            type="radio"
-                                            name="mode"
-                                            value="lastOneStanding"
-                                            id="last-one-standing-radio"
-                                            checked={mode === "lastOneStanding"}
-                                            onChange={(e) => handleModeChange(e.target.value)}
-                                            className="form-radio text-purple-500"
-                                        />
-                                        <span>Last One Standing</span>
-                                    </label>
-                                    <label
-                                        className={`flex items-center space-x-4 text-white ${mode === "randomWinner" ? "animate-pulse" : ""}`}
-                                        id="random-winner-label"
+                                        {autoRemoveText}
+                                    </button>
+                                    <button
+                                        className={`w-[180px] py-2 rounded-lg font-semibold shadow-lg ${isSoundOn
+                                            ? "bg-lime-500 shadow-lime-500/30"
+                                            : "bg-gray-500 shadow-gray-900/30"
+                                            }`}
+                                        onClick={toggleSound}
                                     >
-                                        <input
-                                            type="radio"
-                                            name="mode"
-                                            value="randomWinner"
-                                            id="random-winner-radio"
-                                            checked={mode === "randomWinner"}
-                                            onChange={(e) => handleModeChange(e.target.value)}
-                                            className="form-radio text-purple-500"
-                                        />
-                                        <span>Random Winner</span>
-                                    </label>
+                                        {isSoundOn ? "Sound: ON" : "Sound: OFF"}
+                                    </button>
                                 </div>
-                            </div>
 
+                                {/* Mode Selector */}
+                                <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-2">
+                                    <div className="text-4xl font-bold">Choose Mode</div>
+                                    <div className="flex flex-col items-start gap-1" id="mode-selector">
+                                        <label
+                                            className={`flex items-center space-x-4 text-white ${mode === "lastOneStanding" ? "animate-pulse" : ""}`}
+                                            id="last-one-standing-label"
+                                        >
+                                            <input
+                                                type="radio"
+                                                name="mode"
+                                                value="lastOneStanding"
+                                                id="last-one-standing-radio"
+                                                checked={mode === "lastOneStanding"}
+                                                onChange={(e) => handleModeChange(e.target.value)}
+                                                className="form-radio text-purple-500"
+                                            />
+                                            <span>Last One Standing</span>
+                                        </label>
+                                        <label
+                                            className={`flex items-center space-x-4 text-white ${mode === "randomWinner" ? "animate-pulse" : ""}`}
+                                            id="random-winner-label"
+                                        >
+                                            <input
+                                                type="radio"
+                                                name="mode"
+                                                value="randomWinner"
+                                                id="random-winner-radio"
+                                                checked={mode === "randomWinner"}
+                                                onChange={(e) => handleModeChange(e.target.value)}
+                                                className="form-radio text-purple-500"
+                                            />
+                                            <span>Random Winner</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 )}
