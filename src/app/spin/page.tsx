@@ -32,6 +32,7 @@ const SpinWheel: React.FC = () => {
         "💛", "💜", "🖤", "🤍", "🤎", "💔", "❤️‍🔥", "❤️‍🩹", "💖", "💘",
         "💝", "💗", "💓", "💞", "💕", "❣️", "💟"
     ];
+    const [isArrowDown, setIsArrowDown] = useState(false);
 
     const [isChoosing, setIsChoosing] = useState<boolean>(false);
     const [angleOffset, setAngleOffset] = useState<number>(0);
@@ -250,7 +251,7 @@ const SpinWheel: React.FC = () => {
 
         // add 'arrow' in below array
     }, [names, angleOffset, canvasSize, highlightColor1, highlightColor2, highlightColor3, participantsColor]);
-    
+
     /* =========================================================== */
     /* THIS WAS THE DEFAULT ARROW, IF YOU CHANGE SOMETHING USE THIS TO DEBUG THE EXACT ARROW LOCATION */
     /* =========================================================== */
@@ -315,6 +316,11 @@ const SpinWheel: React.FC = () => {
                     sound.play().catch((err) => console.log("Sound Error:", err));
                     const randomIndex = Math.floor(Math.random() * emojis.length);
                     setEmoji(emojis[randomIndex]);
+
+                    setIsArrowDown(true);
+                    setTimeout(() => {
+                        setIsArrowDown(false);
+                    }, 50);
                 }
             }
 
@@ -604,7 +610,10 @@ const SpinWheel: React.FC = () => {
 
                         {/* Arrow */}
                         <div className="z-20 absolute top-1/2 -right-7 translate-y-[-50%] translate-x-[50%] pointer-events-none">{emoji}</div>
-                        <div className="absolute top-1/2 right-0 translate-y-[-50%] translate-x-[50%] pointer-events-none">
+                        <div
+                            className={`absolute top-1/2 right-0 translate-y-[-50%] translate-x-[50%] pointer-events-none transition-transform duration-150 origin-right ${isArrowDown ? "-rotate-6" : "rotate-0"
+                                }`}
+                        >
                             <Image
                                 src="/arrow-final.png"
                                 height={100}
@@ -612,6 +621,7 @@ const SpinWheel: React.FC = () => {
                                 alt="Pointer Arrow"
                             />
                         </div>
+
 
                         <canvas ref={canvasRef} className=" border-8 border-white rounded-full shadow-lg shadow-black/30" />
                     </div>
