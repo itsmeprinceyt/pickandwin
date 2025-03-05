@@ -715,7 +715,7 @@ const SpinWheel: React.FC = () => {
                                 <div className="p-8 rounded-lg shadow-lg text-center relative bg-white border-2 border-white/30 flex items-center flex-col gap-4">
                                     <div className="flex flex-col text-black">
                                         <p className="font-extralight ">
-                                            Selected user is:
+                                            Chosen:
                                         </p>
                                         <p className="text-4xl p-4 px-20 font-semibold">{names[currentIndex]}</p>
                                     </div>
