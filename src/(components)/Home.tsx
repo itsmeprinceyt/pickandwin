@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import Image from "next/image";
 
 interface HomeProps {
@@ -6,20 +6,16 @@ interface HomeProps {
 }
 
 export default function Home({ color }: HomeProps) {
+    const handleClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+        window.location.href = "/";
+    };
+
     return (
         <div className="absolute top-5 transform left-5 text-white">
-            <Link href="/">
-                <button
-                    className={`rounded-full p-2 ${color}`}
-                >
-                    <Image
-                        src="/home2.png"
-                        height={25}
-                        width={25}
-                        alt="cross"
-                    />
-                </button>
-            </Link>
+            <button className={`rounded-full p-2 ${color}`} onClick={handleClick}>
+                <Image src="/home2.png" height={25} width={25} alt="home icon" />
+            </button>
         </div>
     );
 }
