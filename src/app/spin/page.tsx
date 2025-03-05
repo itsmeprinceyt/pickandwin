@@ -747,7 +747,7 @@ const SpinWheel: React.FC = () => {
 
                             {/* Top Name Counter */}
                             <div className="text-4xl font-semibold bg-black/30 p-2 px-6 rounded-lg text-center flex justify-center items-center" style={{ color: participantsColor }}>
-                                {names[currentIndexRef.current] || "Spin it!"}
+                            {isChoosing ? names[currentIndexRef.current] : emoji}
                             </div>
 
                             {/* Main WHEEL */}
