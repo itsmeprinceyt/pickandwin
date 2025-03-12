@@ -17,6 +17,7 @@ const SpinWheel: React.FC = () => {
     const lastIndexRef = useRef<number>(-1);
     const currentIndexRef = useRef<number>(0);
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [volume, setVolume] = useState(100);
     const [isSoundOn, setIsSoundOn] = useState(true);
     const [emoji, setEmoji] = useState("🤡");
     const emojis = [
@@ -74,7 +75,7 @@ const SpinWheel: React.FC = () => {
     const [panelToggle, setPanelToggle] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const [canvasSize, setCanvasSize] = useState(0);
-
+    
     const [highlightColor1, setHighlightColor1] = useState<string>(() => localStorage.getItem("highlightColor1") || "#ff0000");
     const [highlightColor2, setHighlightColor2] = useState<string>(() => localStorage.getItem("highlightColor2") || "#134dfb");
     const [highlightColor3, setHighlightColor3] = useState<string>(() => localStorage.getItem("highlightColor3") || "#13a300");
@@ -174,9 +175,16 @@ const SpinWheel: React.FC = () => {
     }, [isChoosing, currentIndex]);
 
     useEffect(() => {
-        audioRef.current = new Audio("/sound/tick.mp3");
-        audioRef.current.load();
+        const audio = new Audio("/sound/tick.mp3");
+        audio.load();
+        audioRef.current = audio;
     }, []);
+
+    useEffect(() => {
+        if (audioRef.current) {
+            audioRef.current.volume = volume / 100;
+        }
+    }, [volume]);
 
     const handleModeChange = (selectedMode: string) => {
         if (selectedMode === "randomWinner") {
@@ -345,6 +353,7 @@ const SpinWheel: React.FC = () => {
 
                 if (isSoundOn && audioRef.current) {
                     const sound = audioRef.current.cloneNode() as HTMLAudioElement;
+                    sound.volume = volume / 100;
                     sound.play().catch((err) => console.log("Sound Error:", err));
                 }
 
@@ -433,6 +442,14 @@ const SpinWheel: React.FC = () => {
         setPanelToggle(false);
     };
 
+    const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newVolume = Number(e.target.value);
+        setVolume(newVolume);
+        if (audioRef.current) {
+            audioRef.current.volume = newVolume / 100;
+        }
+    };
+
     const launchConfetti = () => {
         confetti({
             particleCount: 300,
@@ -441,6 +458,7 @@ const SpinWheel: React.FC = () => {
         });
         if (visualMode === "special") {
             const audio = new Audio("/sound/oie.mp3");
+            audio.volume = volume / 100;
             audio.play();
         }
     };
@@ -589,7 +607,7 @@ const SpinWheel: React.FC = () => {
                                     </div>
                                 </div>
 
-                                {/* Auto - Remove & Toggle Sound */}
+                                {/* Auto - Remove */}
                                 <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-5">
                                     <button
                                         className={`w-[230px] py-2 rounded-lg font-semibold shadow-lg ${autoRemove
@@ -600,6 +618,10 @@ const SpinWheel: React.FC = () => {
                                     >
                                         {autoRemoveText}
                                     </button>
+                                </div>
+
+                                {/* Sound ON & OFF */}
+                                <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-2">
                                     <button
                                         className={`w-[230px] py-2 rounded-lg font-semibold shadow-lg ${isSoundOn
                                             ? "bg-lime-500 shadow-lime-500/30"
@@ -609,6 +631,18 @@ const SpinWheel: React.FC = () => {
                                     >
                                         {isSoundOn ? "Sound: ON" : "Sound: OFF"}
                                     </button>
+
+                                    <div className="text-sm font-bold mt-1">Volume: {volume}%</div>
+                                    <input
+                                        id="timeoutSlider"
+                                        type="range"
+                                        min="1"
+                                        max="100"
+                                        value={volume}
+                                        disabled={!isSoundOn}
+                                        onChange={handleVolumeChange}
+                                        className="w-[150px] h-2 bg-purple-300 rounded-lg appearance-none cursor-pointer active:bg-purple-400"
+                                    />
                                 </div>
 
                                 {/* Spin Visual */}
@@ -747,7 +781,7 @@ const SpinWheel: React.FC = () => {
 
                             {/* Top Name Counter */}
                             <div className="text-4xl font-semibold bg-black/30 p-2 px-6 rounded-lg text-center flex justify-center items-center" style={{ color: participantsColor }}>
-                            {isChoosing ? names[currentIndexRef.current] : emoji}
+                                {isChoosing ? names[currentIndexRef.current] : emoji}
                             </div>
 
                             {/* Main WHEEL */}
