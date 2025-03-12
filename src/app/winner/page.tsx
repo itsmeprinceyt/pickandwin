@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import MadeByMe from "@/(components)/MadeByMe"
 import HomeButton from "@/(components)/Home";
 import confetti from "canvas-confetti";
@@ -10,6 +10,21 @@ const Winner = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const winnerName = searchParams.get("name");
+
+    const [winner1, setWinner1] = useState<string>(() => localStorage.getItem("winner1") || "#22c55e");
+    const [winner2, setWinner2] = useState<string>(() => localStorage.getItem("winner1") || "#14532d");
+
+    useEffect(() => {
+        localStorage.setItem("winner1", winner1);
+        localStorage.setItem("winner2", winner2);
+    }, [winner1, winner2]);
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            setWinner1(localStorage.getItem("winner1") || "#22c55e");
+            setWinner2(localStorage.getItem("winner2") || "#14532d");
+        }
+    }, []);
 
     useEffect(() => {
         if (!winnerName) {
@@ -30,11 +45,14 @@ const Winner = () => {
             clearTimeout(confettiTimeout);
         };
     }, [winnerName, router]);
-    
+
 
     return (
         <>
-            <div className="w-screen h-screen bg-gradient-to-b from-green-500 to-green-900 flex justify-center items-center">
+            <div className="w-screen h-screen flex justify-center items-center"
+                style={{
+                    background: `linear-gradient(to bottom, ${winner1}, ${winner2})`,
+                }}>
                 <div className="top-5 left-5">
                     <HomeButton color="bg-green-800" />
                 </div>

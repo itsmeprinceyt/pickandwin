@@ -75,7 +75,13 @@ const SpinWheel: React.FC = () => {
     const [panelToggle, setPanelToggle] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const [canvasSize, setCanvasSize] = useState(0);
-    
+
+    const [gradient1, setGradient1] = useState<string>(() => localStorage.getItem("gradient1") || "#9f7aea");
+    const [gradient2, setGradient2] = useState<string>(() => localStorage.getItem("gradient2") || "#581c87");
+
+    const [winner1, setWinner1] = useState<string>(() => localStorage.getItem("winner1") || "#22c55e");
+    const [winner2, setWinner2] = useState<string>(() => localStorage.getItem("winner1") || "#14532d");
+
     const [highlightColor1, setHighlightColor1] = useState<string>(() => localStorage.getItem("highlightColor1") || "#ff0000");
     const [highlightColor2, setHighlightColor2] = useState<string>(() => localStorage.getItem("highlightColor2") || "#134dfb");
     const [highlightColor3, setHighlightColor3] = useState<string>(() => localStorage.getItem("highlightColor3") || "#13a300");
@@ -90,15 +96,27 @@ const SpinWheel: React.FC = () => {
     };
 
     useEffect(() => {
+        localStorage.setItem("gradient1", gradient1);
+        localStorage.setItem("gradient2", gradient2);
+
+        localStorage.setItem("winner1", winner1);
+        localStorage.setItem("winner2", winner2);
+
         localStorage.setItem("highlightColor1", highlightColor1);
         localStorage.setItem("highlightColor2", highlightColor2);
         localStorage.setItem("highlightColor3", highlightColor3);
         //localStorage.setItem("arrow", arrow);
         localStorage.setItem("participantsColor", participantsColor);
-    }, [highlightColor1, highlightColor2, highlightColor3, participantsColor]);
+    }, [gradient1, gradient2,winner1,winner2, highlightColor1, highlightColor2, highlightColor3, participantsColor]);
 
     useEffect(() => {
         if (typeof window !== "undefined") {
+            setGradient1(localStorage.getItem("gradient1") || "#9f7aea");
+            setGradient2(localStorage.getItem("gradient2") || "#581c87");
+
+            setWinner1(localStorage.getItem("winner1") || "#22c55e");
+            setWinner2(localStorage.getItem("winner2") || "#14532d");
+
             setHighlightColor1(localStorage.getItem("highlightColor1") || "#ff0000");
             setHighlightColor2(localStorage.getItem("highlightColor2") || "#134dfb");
             setHighlightColor3(localStorage.getItem("highlightColor3") || "#13a300");
@@ -411,6 +429,15 @@ const SpinWheel: React.FC = () => {
         setParticipantsColor("#FFFFFF");
         setSelectedPalette(null);
     }
+    const resetDefaultColor2 = () => {
+        setGradient1("#9f7aea");
+        setGradient2("#581c87");
+    }
+
+    const resetDefaultColor3 = () => {
+        setWinner1("#22c55e");
+        setWinner2("#14532d");
+    }
 
     const handleColorPallete = (paletteNumber: number) => {
         setSelectedPalette(paletteNumber);
@@ -464,13 +491,18 @@ const SpinWheel: React.FC = () => {
     };
     return (
         <div>
-            <div className="bg-gradient-to-b from-purple-500 to-purple-900 w-screen h-screen flex flex-col justify-center items-center relative">
+            <div
+                className="w-screen h-screen flex flex-col justify-center items-center relative"
+                style={{
+                    background: `linear-gradient(to bottom, ${gradient1}, ${gradient2})`,
+                }}
+            >
                 <div className="top-5 left-5">
-                    <HomeButton color="bg-purple-800" />
+                    <HomeButton color="bg-black/30" />
                 </div>
                 <div className="absolute top-5 transform right-5 text-white">
                     <button
-                        className="bg-purple-800 rounded-full p-2"
+                        className="bg-black/30 rounded-full p-2"
                         onClick={() => setToggle(prev => !prev)}>
                         <Image
                             src="/settings.png"
@@ -482,7 +514,7 @@ const SpinWheel: React.FC = () => {
                 </div>
                 <div className="absolute top-20 transform right-5 text-white">
                     <button
-                        className="bg-purple-800 rounded-full p-2"
+                        className="bg-black/30 rounded-full p-2"
                         onClick={handlePanelOpen}>
                         <Image
                             className="invert"
@@ -524,8 +556,9 @@ const SpinWheel: React.FC = () => {
                                     </div>
                                 </div>
 
-                                {/* Reset to default */}
+                                {/* Slice Colors Container*/}
                                 <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-4 relative">
+                                {/* Reset to default */}
                                     <button className="absolute right-2 top-2 scale-50 hover:scale-75"
                                         onClick={resetDefaultColor}>
                                         <Image
@@ -604,6 +637,72 @@ const SpinWheel: React.FC = () => {
                                             </div>
 
                                         </div>
+                                    </div>
+                                </div>
+
+                                {/* Background Color Container */}
+                                <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-4 relative">
+                                    {/* Reset Default */}
+                                    <button className="absolute right-2 top-2 scale-50 hover:scale-75"
+                                        onClick={resetDefaultColor2}>
+                                        <Image
+                                            className="invert"
+                                            src="/reload.png"
+                                            height={25}
+                                            width={25}
+                                            alt="Reload"
+                                        />
+                                    </button>
+                                    {/* Background Colors */}
+                                    <div className="text-4xl font-bold">Background</div>
+                                    <div className="flex gap-4">
+                                        {[gradient1, gradient2].map((color, index) => (
+                                            <label key={index} className="relative cursor-pointer">
+                                                <input
+                                                    type="color"
+                                                    value={color}
+                                                    onChange={(e) => index === 0 ? setGradient1(e.target.value) : setGradient2(e.target.value)}
+                                                    className="absolute inset-0 opacity-0 cursor-pointer"
+                                                />
+                                                <div
+                                                    className="w-10 h-10 rounded-md border border-white"
+                                                    style={{ backgroundColor: color }}
+                                                ></div>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Winner Color Container */}
+                                <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-4 relative">
+                                    {/* Reset Default */}
+                                    <button className="absolute right-2 top-2 scale-50 hover:scale-75"
+                                        onClick={resetDefaultColor3}>
+                                        <Image
+                                            className="invert"
+                                            src="/reload.png"
+                                            height={25}
+                                            width={25}
+                                            alt="Reload"
+                                        />
+                                    </button>
+                                    {/* Winner Colors */}
+                                    <div className="text-4xl font-bold">Win Color</div>
+                                    <div className="flex gap-4">
+                                        {[winner1, winner2].map((color, index) => (
+                                            <label key={index} className="relative cursor-pointer">
+                                                <input
+                                                    type="color"
+                                                    value={color}
+                                                    onChange={(e) => index === 0 ? setWinner1(e.target.value) : setWinner2(e.target.value)}
+                                                    className="absolute inset-0 opacity-0 cursor-pointer"
+                                                />
+                                                <div
+                                                    className="w-10 h-10 rounded-md border border-white"
+                                                    style={{ backgroundColor: color }}
+                                                ></div>
+                                            </label>
+                                        ))}
                                     </div>
                                 </div>
 
