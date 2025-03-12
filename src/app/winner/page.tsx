@@ -54,7 +54,7 @@ const Winner = () => {
                     background: `linear-gradient(to bottom, ${winner1}, ${winner2})`,
                 }}>
                 <div className="top-5 left-5">
-                    <HomeButton color="bg-green-800" />
+                    <HomeButton color="bg-black/30" />
                 </div>
                 <div className="text-center animate-bounce pointer-events-none">
                     <h1 className="text-white text-4xl md:text-6xl font-bold mb-6">🥳 The Winner is 🎉</h1>
