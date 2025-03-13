@@ -11,7 +11,9 @@ const SpinWheel: React.FC = () => {
     const router = useRouter();
     const namesParam = searchParams.get("names");
     const [names, setNames] = useState<string[]>([]);
+    const [displayNames, setDisplayNames] = useState<string[]>([]);
     const [inputValue, setInputValue] = useState(names.join("\n"));
+    const initialized = useRef(false);
     const [currentName, setCurrentName] = useState<string | null>(null);
     const [currentIndex, setCurrentIndex] = useState<number>();
     const lastIndexRef = useRef<number>(-1);
@@ -73,6 +75,7 @@ const SpinWheel: React.FC = () => {
     const [timeoutDuration, setTimeoutDuration] = useState(3);
     const [toggle, setToggle] = useState(false);
     const [panelToggle, setPanelToggle] = useState(false);
+    const [panelList, setPanelListToggle] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const [canvasSize, setCanvasSize] = useState(0);
 
@@ -107,7 +110,7 @@ const SpinWheel: React.FC = () => {
         localStorage.setItem("highlightColor3", highlightColor3);
         //localStorage.setItem("arrow", arrow);
         localStorage.setItem("participantsColor", participantsColor);
-    }, [gradient1, gradient2,winner1,winner2, highlightColor1, highlightColor2, highlightColor3, participantsColor]);
+    }, [gradient1, gradient2, winner1, winner2, highlightColor1, highlightColor2, highlightColor3, participantsColor]);
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -139,6 +142,13 @@ const SpinWheel: React.FC = () => {
             router.push("/");
         }
     }, [namesParam, router]);
+
+    useEffect(() => {
+        if (!initialized.current && names.length > 0) {
+            setDisplayNames(names.map(name => `✔️ | ${name}`));
+            initialized.current = true;
+        }
+    }, [names]);
 
     useEffect(() => {
         if (names.length === 1) {
@@ -407,6 +417,14 @@ const SpinWheel: React.FC = () => {
 
     const removeName = (index: number) => {
         setNames((prevNames) => prevNames.filter((_, i) => i !== index));
+        setDisplayNames((prevDisplayNames) =>
+            prevDisplayNames.map((displayName, i) => {
+                if (i === index) {
+                    return displayName.replace("✔️", "❌");
+                }
+                return displayName;
+            })
+        );
         setIsChoosing(false);
         setCurrentIndex(undefined);
     };
@@ -452,11 +470,18 @@ const SpinWheel: React.FC = () => {
     }
     const handlePanelOpen = () => {
         setPanelToggle((prev) => !prev);
-
         if (!panelToggle) {
             setInputValue(names.join("\n"));
         }
     };
+
+    const handleListOpen = () => {
+        setPanelListToggle((prev) => !prev);
+        if (!panelToggle) {
+            return
+        }
+    };
+
     const handleUpdateName = (): void => {
         const newNames = inputValue
             .split(/[\n,]/)
@@ -467,6 +492,8 @@ const SpinWheel: React.FC = () => {
         setNames(uniqueNames);
         setInputValue(uniqueNames.join("\n"));
         setPanelToggle(false);
+
+        setDisplayNames([...uniqueNames.map(name => `✔️ | ${name}`)]);
     };
 
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -512,7 +539,9 @@ const SpinWheel: React.FC = () => {
                         />
                     </button>
                 </div>
-                <div className="absolute top-20 transform right-5 text-white">
+
+                {/* Panel Open */}
+                <div className="absolute top-[70px] transform right-5 text-white">
                     <button
                         className="bg-black/30 rounded-full p-2"
                         onClick={handlePanelOpen}>
@@ -521,10 +550,26 @@ const SpinWheel: React.FC = () => {
                             src="/panel.png"
                             height={25}
                             width={25}
-                            alt="cross"
+                            alt="panel"
                         />
                     </button>
                 </div>
+
+                {/* List Open */}
+                <div className="absolute top-[120px] transform right-5 text-white">
+                    <button
+                        className="bg-black/30 rounded-full p-2"
+                        onClick={handleListOpen}>
+                        <Image
+                            className="invert"
+                            src="/list2.png"
+                            height={25}
+                            width={25}
+                            alt="list"
+                        />
+                    </button>
+                </div>
+
 
                 {/* Settings */}
                 {toggle && (
@@ -558,7 +603,7 @@ const SpinWheel: React.FC = () => {
 
                                 {/* Slice Colors Container*/}
                                 <div className="w-[320px] bg-black/30 border-2 border-purple-900 shadow-lg shadow-black/20 p-5 rounded-lg flex flex-col items-center gap-4 relative">
-                                {/* Reset to default */}
+                                    {/* Reset to default */}
                                     <button className="absolute right-2 top-2 scale-50 hover:scale-75"
                                         onClick={resetDefaultColor}>
                                         <Image
@@ -925,11 +970,9 @@ const SpinWheel: React.FC = () => {
                                 <canvas ref={canvasRef} className=" border-8 border-white rounded-full shadow-lg shadow-black/30" />
                             </div>
                         </div>
+
+                        {/* Participants List */}
                         <div className="z-30">
-
-
-
-                            {/* Input Field */}
                             {panelToggle && (
                                 <div className="fixed inset-0 flex flex-col items-center justify-center bg-black/70 gap-2">
                                     <div className="relative bg-white border-2 border-white/30 text-white p-4 flex flex-col justify-center items-center rounded-xl shadow-xl shadow-white/20 gap-4">
@@ -961,7 +1004,35 @@ const SpinWheel: React.FC = () => {
                                     </div>
                                 </div>
                             )}
+
+                            {/* List */}
+                            {panelList && (
+                                <div className="fixed inset-0 flex flex-col items-center justify-center bg-black/70 gap-2">
+                                    <div className="relative bg-white border-2 border-white/30 text-white p-4 flex flex-col justify-center items-center rounded-xl shadow-xl shadow-white/20 gap-4">
+                                        <div className="text-xl font-extralight text-black">Activity List</div>
+                                        <div className="rounded-lg shadow-lg text-center relative bg-white border-2 border-white/30 flex items-center flex-col gap-4">
+                                            <textarea
+                                                className="rounded-l-xl rounded-t-xl rounded-b-xl rounded-tr-none rounded-br-none border border-purple-600 shadow-lg shadow-purple-600/30 w-[300px] h-[400px] p-2 focus:outline-none scrollbar-thin scrollbar-track-violet-500 scrollbar-thumb-white text-black pointer-events-none"
+                                                style={{ resize: "none" }}
+                                                value={displayNames.join("\n")} // Show names with emojis
+                                                readOnly
+                                            />
+                                        </div>
+                                        <div className="flex gap-5">
+                                            {/* Close button */}
+                                            <button
+                                                className="bg-purple-600 shadow-lg shadow-purple-600/60 text-white w-[100px] px-4 py-2 rounded-md hover:scale-105"
+                                                onClick={() => setPanelListToggle(false)}
+                                            >
+                                                Close
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
+
+
 
 
                     </div>
