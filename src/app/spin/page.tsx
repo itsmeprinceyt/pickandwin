@@ -1012,7 +1012,7 @@ const SpinWheel: React.FC = () => {
                                         <div className="text-xl font-extralight text-black">Activity List</div>
                                         <div className="rounded-lg shadow-lg text-center relative bg-white border-2 border-white/30 flex items-center flex-col gap-4">
                                             <textarea
-                                                className="rounded-l-xl rounded-t-xl rounded-b-xl rounded-tr-none rounded-br-none border border-purple-600 shadow-lg shadow-purple-600/30 w-[300px] h-[400px] p-2 focus:outline-none scrollbar-thin scrollbar-track-violet-500 scrollbar-thumb-white text-black pointer-events-none"
+                                                className="rounded-l-xl rounded-t-xl rounded-b-xl rounded-tr-none rounded-br-none border border-purple-600 shadow-lg shadow-purple-600/30 w-[300px] h-[400px] p-2 focus:outline-none scrollbar-thin scrollbar-track-violet-500 scrollbar-thumb-white text-black"
                                                 style={{ resize: "none" }}
                                                 value={displayNames.join("\n")} // Show names with emojis
                                                 readOnly
