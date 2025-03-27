@@ -30,7 +30,7 @@ const Shuffle = () => {
   const [gradient2, setGradient2] = useState<string>(() => localStorage.getItem("gradient2") || "#581c87");
 
   const [winner1, setWinner1] = useState<string>(() => localStorage.getItem("winner1") || "#22c55e");
-  const [winner2, setWinner2] = useState<string>(() => localStorage.getItem("winner1") || "#14532d");
+  const [winner2, setWinner2] = useState<string>(() => localStorage.getItem("winner2") || "#14532d");
 
   useEffect(() => {
     localStorage.setItem("gradient1", gradient1);
