@@ -83,7 +83,7 @@ const SpinWheel: React.FC = () => {
     const [gradient2, setGradient2] = useState<string>(() => localStorage.getItem("gradient2") || "#581c87");
 
     const [winner1, setWinner1] = useState<string>(() => localStorage.getItem("winner1") || "#22c55e");
-    const [winner2, setWinner2] = useState<string>(() => localStorage.getItem("winner1") || "#14532d");
+    const [winner2, setWinner2] = useState<string>(() => localStorage.getItem("winner2") || "#14532d");
 
     const [highlightColor1, setHighlightColor1] = useState<string>(() => localStorage.getItem("highlightColor1") || "#ff0000");
     const [highlightColor2, setHighlightColor2] = useState<string>(() => localStorage.getItem("highlightColor2") || "#134dfb");
@@ -836,7 +836,7 @@ const SpinWheel: React.FC = () => {
                                                 onChange={() => setVisualMode("special")}
                                                 className="form-radio text-purple-500"
                                             />
-                                            <span>Special</span>
+                                            <span>Special🐈</span>
                                         </label>
                                     </div>
                                 </div>
