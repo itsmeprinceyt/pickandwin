@@ -1,6 +1,3 @@
-# TO DO
-- add side openable bar to enter new names and then click on update
-
 # Pick And Drop
 
 Pick and Win helps you choose giveaway winners easily. Just add participant names, shuffle them, and pick a winner at random. It's perfect for content creators running giveaways and makes selecting a fair winner quick and simple.
