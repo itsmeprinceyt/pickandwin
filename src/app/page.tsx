@@ -107,7 +107,7 @@ export default function Home() {
           Start
         </span>
         button!</h1>
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
 
         {/* Participants Container */}
         <div className="p-5 bg-black/30 border-2 border-purple-900 rounded-2xl w-96 shadow-lg shadow-black/20">
@@ -178,14 +178,14 @@ export default function Home() {
             </button>
 
             {/* Shuffle */}
-            <Link href={{pathname: "/shuffle",query: { names: nameList.join(",") },}}>
-              <button className={`bg-white text-black font-semibold rounded-xl w-[90px] p-2 ${nameList.length < 2 ? "opacity-50 cursor-not-allowed" : "hover:shadow-lg hover:shadow-white/30 hover:scale-105 ease-linear duration-75"}`}disabled={nameList.length < 2}>
+            <Link href={{ pathname: "/shuffle", query: { names: nameList.join(",") }, }}>
+              <button className={`bg-white text-black font-semibold rounded-xl w-[90px] p-2 ${nameList.length < 2 ? "opacity-50 cursor-not-allowed" : "hover:shadow-lg hover:shadow-white/30 hover:scale-105 ease-linear duration-75"}`} disabled={nameList.length < 2}>
                 Shuffle
               </button>
             </Link>
             {/* Spin the Wheel */}
-            <Link href={{pathname: "/spin",query: { names: nameList.join(",") },}}>
-              <button className={`bg-white text-black font-semibold rounded-xl w-[90px] p-2 ${nameList.length < 2 ? "opacity-50 cursor-not-allowed" : "hover:shadow-lg hover:shadow-white/30 hover:scale-105 ease-linear duration-75"}`}disabled={nameList.length < 2}>
+            <Link href={{ pathname: "/spin", query: { names: nameList.join(",") }, }}>
+              <button className={`bg-white text-black font-semibold rounded-xl w-[90px] p-2 ${nameList.length < 2 ? "opacity-50 cursor-not-allowed" : "hover:shadow-lg hover:shadow-white/30 hover:scale-105 ease-linear duration-75"}`} disabled={nameList.length < 2}>
                 Wheel
               </button>
             </Link>

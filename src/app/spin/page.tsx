@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, useRef, useCallback, Suspense } from "react";
-import HomeButton from "@/(components)/Home";
+import HomeButton from "../../(components)/Home";
 import Image from "next/image";
 import confetti from "canvas-confetti";
 
@@ -10,19 +10,20 @@ const SpinWheel: React.FC = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const namesParam = searchParams.get("names");
-    const [names, setNames] = useState<string[]>([]);
+
+    const [names, setNames] = useState<{ name: string; removed: boolean }[]>([]);
     const [displayNames, setDisplayNames] = useState<string[]>([]);
-    const [inputValue, setInputValue] = useState(names.join("\n"));
-    const initialized = useRef(false);
+    const [inputValue, setInputValue] = useState<string>(names.map(n => n.name).join("\n"));
+    const initialized = useRef<boolean>(false);
     const [currentName, setCurrentName] = useState<string | null>(null);
-    const [currentIndex, setCurrentIndex] = useState<number>();
+    const [currentIndex, setCurrentIndex] = useState<number | undefined>(undefined);
     const lastIndexRef = useRef<number>(-1);
     const currentIndexRef = useRef<number>(0);
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    const [volume, setVolume] = useState(100);
-    const [isSoundOn, setIsSoundOn] = useState(true);
-    const [emoji, setEmoji] = useState("🤡");
-    const emojis = [
+    const [volume, setVolume] = useState<number>(100);
+    const [isSoundOn, setIsSoundOn] = useState<boolean>(true);
+    const [emoji, setEmoji] = useState<string>("🤡");
+    const emojis: string[] = [
         "😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇",
         "🙂", "🙃", "😉", "😌", "😍", "🥰", "😘", "😗", "😙", "😚",
         "😋", "😛", "😝", "😜", "🤪", "🤨", "🧐", "🤓", "😎", "🥳",
@@ -58,26 +59,26 @@ const SpinWheel: React.FC = () => {
         "🔥"
     ];
 
-    const [isArrowDown, setIsArrowDown] = useState(false);
-
+    const [isArrowDown, setIsArrowDown] = useState<boolean>(false);
     const [isChoosing, setIsChoosing] = useState<boolean>(false);
     const [angleOffset, setAngleOffset] = useState<number>(0);
-    const [isIdle, setIsIdle] = useState(true);
-    const idleSpeed = 0.002;
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [isIdle, setIsIdle] = useState<boolean>(true);
+    const idleSpeed: number = 0.002;
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [mode, setMode] = useState("lastOneStanding");
     const [visualMode, setVisualMode] = useState<"text" | "emoji" | "special">("emoji");
-    const specialDefaultImage = "/oie.png";
-    const specialSpinImage = "/oie_loop_cropped.gif";
+    const specialDefaultImage: string = "/oie.png";
+    const specialSpinImage: string = "/oie_loop_cropped.gif";
 
-    const [autoRemove, setAutoRemove] = useState(false);
-    const [autoRemoveText, setAutoRemoveText] = useState("Auto-Remove: OFF");
-    const [timeoutDuration, setTimeoutDuration] = useState(3);
-    const [toggle, setToggle] = useState(false);
-    const [panelToggle, setPanelToggle] = useState(false);
-    const [panelList, setPanelListToggle] = useState(false);
-    const [showPopup, setShowPopup] = useState(false);
-    const [canvasSize, setCanvasSize] = useState(0);
+    const [autoRemove, setAutoRemove] = useState<boolean>(false);
+    const [autoRemoveText, setAutoRemoveText] = useState<string>("Auto-Remove: OFF");
+    const [timeoutDuration, setTimeoutDuration] = useState<number>(3);
+    const [toggle, setToggle] = useState<boolean>(false);
+    const [panelToggle, setPanelToggle] = useState<boolean>(false);
+    const [panelList, setPanelListToggle] = useState<boolean>(false);
+    const [showPopup, setShowPopup] = useState<boolean>(false);
+    const [canvasSize, setCanvasSize] = useState<number>(0);
+
 
     const [gradient1, setGradient1] = useState<string>(() => localStorage.getItem("gradient1") || "#9f7aea");
     const [gradient2, setGradient2] = useState<string>(() => localStorage.getItem("gradient2") || "#581c87");
@@ -129,15 +130,16 @@ const SpinWheel: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (names.length === 1) {
-            router.push(`/winner?name=${encodeURIComponent(names[0])}`);
+        const remaining = names.filter(n => !n.removed);
+        if (remaining.length === 1) {
+            router.push(`/winner?name=${encodeURIComponent(remaining[0].name)}`);
         }
     }, [names, router]);
 
     useEffect(() => {
         if (namesParam) {
             const decodedNames = decodeURIComponent(namesParam).split(",");
-            setNames(decodedNames);
+            setNames(decodedNames.map(name => ({ name, removed: false })));
         } else {
             router.push("/");
         }
@@ -145,23 +147,24 @@ const SpinWheel: React.FC = () => {
 
     useEffect(() => {
         if (!initialized.current && names.length > 0) {
-            setDisplayNames(names.map(name => `✔️ | ${name}`));
+            setDisplayNames(names.map(obj => `${!obj.removed ? "✔️" : "❌"} | ${obj.name}`));
             initialized.current = true;
         }
     }, [names]);
 
     useEffect(() => {
-        if (names.length === 1) {
-            router.push(`/winner?name=${encodeURIComponent(names[0])}`);
-        }
-    }, [names, router]);
-
-    useEffect(() => {
         if (mode === "randomWinner" && currentName) {
             router.push(`/winner?name=${encodeURIComponent(currentName)}`);
-        } else if (mode === "lastOneStanding" && names.length === 2 && currentName) {
-            setNames((prevNames) => prevNames.filter((name) => name !== currentName));
-            setCurrentName(null);
+        } else if (mode === "lastOneStanding") {
+            const remaining = names.filter(n => !n.removed);
+            if (remaining.length === 2 && currentName) {
+                setNames((prevNames) =>
+                    prevNames.map((n) =>
+                        n.name === currentName ? { ...n, removed: true } : n
+                    )
+                );
+                setCurrentName(null);
+            }
         }
     }, [mode, currentName, names, router]);
 
@@ -245,6 +248,7 @@ const SpinWheel: React.FC = () => {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
+        const activeNames = names.filter(n => !n.removed);
         const dpr = window.devicePixelRatio || 1;
         const radius = canvasSize / 2;
         const centerX = canvasSize / 2;
@@ -258,14 +262,14 @@ const SpinWheel: React.FC = () => {
 
         ctx.clearRect(0, 0, canvasSize, canvasSize);
 
-        const numSlices = names.length;
+        const numSlices = activeNames.length;
         if (numSlices === 0) return;
 
         const angleStep = (2 * Math.PI) / numSlices;
         const colors = [highlightColor1, highlightColor2, highlightColor3];
         let colorIndex = 0;
         const isOdd = names.length % colors.length !== 0;
-        names.forEach((name, i) => {
+        activeNames.forEach((player, i) => {
             const startAngle = angleOffset + i * angleStep;
             const endAngle = angleOffset + (i + 1) * angleStep;
 
@@ -302,7 +306,7 @@ const SpinWheel: React.FC = () => {
                 textsize = 20;
             }
             ctx.font = `bold ${Math.max(12, canvasSize / textsize)}px Arial`;
-            ctx.fillText(name, radius - 10, 5);
+            ctx.fillText(player.name, radius - 10, 5);
             ctx.restore();
         });
 
@@ -341,7 +345,8 @@ const SpinWheel: React.FC = () => {
         setAngleOffset(0);
         setIsChoosing(true);
 
-        const sliceAngle = (2 * Math.PI) / names.length;
+        const activeNames = names.filter(n => !n.removed);
+        const sliceAngle = (2 * Math.PI) / activeNames.length;
         let angVel = Math.random() * 0.3 + 0.3;
         let ang = angleOffset;
         const spinTime = timeoutDuration * 1000;
@@ -353,11 +358,14 @@ const SpinWheel: React.FC = () => {
                 ang %= 2 * Math.PI;
                 setAngleOffset(ang);
                 const arrowAngle = (0 - ang + 2 * Math.PI) % (2 * Math.PI);
-                const selectedIndex = Math.floor(arrowAngle / sliceAngle) % names.length;
-                setCurrentName(names[selectedIndex]);
+                const selectedIndex = Math.floor(arrowAngle / sliceAngle) % activeNames.length;
+                const selectedName = activeNames[selectedIndex].name;
+                setCurrentName(selectedName);
                 setCurrentIndex(selectedIndex);
                 setIsChoosing(false);
-                handleSpinEnd(selectedIndex);
+                const originalIndex = names.findIndex(n => n.name === selectedName);
+                setCurrentIndex(originalIndex);
+                handleSpinEnd(originalIndex);
                 return;
             }
             const progress = elapsed / spinTime;
@@ -398,7 +406,7 @@ const SpinWheel: React.FC = () => {
                 setTimeout(() => {
                     const arrowAngle = (0 - ang + 2 * Math.PI) % (2 * Math.PI);
                     const selectedIndex = Math.floor(arrowAngle / sliceAngle) % names.length;
-                    setCurrentName(names[selectedIndex]);
+                    setCurrentName(names[selectedIndex].name);
                     setCurrentIndex(selectedIndex);
                     setIsChoosing(false);
                     handleSpinEnd(selectedIndex);
@@ -416,26 +424,31 @@ const SpinWheel: React.FC = () => {
     };
 
     const removeName = (index: number) => {
-        setNames((prevNames) => prevNames.filter((_, i) => i !== index));
-        setDisplayNames((prevDisplayNames) =>
-            prevDisplayNames.map((displayName, i) => {
-                if (i === index) {
-                    return displayName.replace("✔️", "❌");
-                }
-                return displayName;
-            })
+        setNames((prevNames) =>
+            prevNames.map((n, i) =>
+                i === index ? { ...n, removed: true } : n
+            )
         );
+
+        setDisplayNames((prevDisplayNames) =>
+            prevDisplayNames.map((displayName, i) =>
+                i === index
+                    ? displayName.replace("✔️", "❌")
+                    : displayName
+            )
+        );
+
         setIsChoosing(false);
         setCurrentIndex(undefined);
     };
 
-    const handleSpinEnd = (selectedIndex: number) => {
+    const handleSpinEnd = (originalIndex: number) => {
         launchConfetti();
-        setCurrentIndex(selectedIndex);
+        setCurrentIndex(originalIndex);
         setIsChoosing(false);
 
         if (autoRemove) {
-            removeName(selectedIndex);
+            removeName(originalIndex);
         }
     };
 
@@ -468,10 +481,11 @@ const SpinWheel: React.FC = () => {
         const randomIndex = Math.floor(Math.random() * emojis.length);
         setEmoji(emojis[randomIndex]);
     }
+
     const handlePanelOpen = () => {
-        setPanelToggle((prev) => !prev);
+        setPanelToggle(prev => !prev);
         if (!panelToggle) {
-            setInputValue(names.join("\n"));
+            setInputValue(names.map(n => n.name).join("\n"));
         }
     };
 
@@ -489,12 +503,15 @@ const SpinWheel: React.FC = () => {
             .filter((name) => name !== "");
 
         const uniqueNames = Array.from(new Set(newNames));
-        setNames(uniqueNames);
+        const nameObjects = uniqueNames.map(name => ({ name, removed: false }));
+
+        setNames(nameObjects);
         setInputValue(uniqueNames.join("\n"));
         setPanelToggle(false);
 
-        setDisplayNames([...uniqueNames.map(name => `✔️ | ${name}`)]);
+        setDisplayNames(nameObjects.map(obj => `✔️ | ${obj.name}`));
     };
+
 
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newVolume = Number(e.target.value);
@@ -895,7 +912,7 @@ const SpinWheel: React.FC = () => {
                                         <p className="font-extralight ">
                                             Chosen:
                                         </p>
-                                        <p className="text-4xl p-4 px-20 font-semibold">{names[currentIndex]}</p>
+                                        <p className="text-4xl p-4 px-20 font-semibold">{names[currentIndex].name}</p>
                                     </div>
 
                                     <div className="flex gap-4">
@@ -925,7 +942,7 @@ const SpinWheel: React.FC = () => {
 
                             {/* Top Name Counter */}
                             <div className="text-4xl font-semibold bg-black/30 p-2 px-6 rounded-lg text-center flex justify-center items-center" style={{ color: participantsColor }}>
-                                {isChoosing ? names[currentIndexRef.current] : emoji}
+                                {isChoosing ? names[currentIndexRef.current].name : emoji}
                             </div>
 
                             {/* Main WHEEL */}
